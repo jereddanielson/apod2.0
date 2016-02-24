@@ -1,0 +1,46 @@
+#app {
+	width: 100vw;
+	height: 100vh;
+	background: black;
+}
+
+#menu {
+	width: 8vw;
+	height: 8vh;
+	background: rgba(255, 255, 255, .2);
+}
+
+#sidebar {
+	width: 10vw;
+	height: 40vh;
+	top: 12vh;
+	background: rgba(255, 200, 200, .2);
+}
+
+#imagebox {
+	margin: 0 auto;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(255, 255, 255, .3);
+	min-width: 200px;
+	min-height: 200px;
+}
+
+#filmstrip {
+	width: 100vw;
+	height: 20vh;
+	min-height: 120px;
+	bottom: 0;
+	background: rgba(200, 220, 255, .2);
+}
+
+.abs-pos {
+	position: absolute;
+}
+
+.image {
+	min-width: 100px;
+	min-height: 100px;
+	background: rgba(100, 200, 150, .2);
+}

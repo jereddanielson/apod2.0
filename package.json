@@ -1,0 +1,12 @@
+{
+  "name": "apod",
+  "version": "1.0.0",
+  "description": "NASA Astronomy Picture of the Day 2.0",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Jered Danielson",
+  "license": "MIT",
+  "devDependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
