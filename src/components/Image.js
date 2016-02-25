@@ -1,15 +1,10 @@
 import React from "react"
 
-/*
-PROPS:
-url - SD image source
-*/
-
 var Image = React.createClass({
 	render() {
 		return (
-			<div className="abs-pos image">
-				<img src={this.props.sdurl} alt={this.props.title} />
+			<div className="image">
+				<img src={this.props.imgsrc} />
 			</div>
 		);
 	}

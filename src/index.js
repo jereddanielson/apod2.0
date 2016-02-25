@@ -29,7 +29,7 @@ import FilmStrip from "./components/FilmStrip"
 
 var APP = React.createClass({
 	getInitialState() {
-		return {date: new Date(), sdurl: ""};
+		return {date: new Date(), data: {}};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -61,7 +61,7 @@ var APP = React.createClass({
 			<div id="app" className="abs-pos">
 				<Menu />
 				<SideBar />
-				<ImageBox sdurl={this.state.sdurl} onIMGLoad={this.onIMGLoad}/>
+				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>
 				<FilmStrip />
 			</div>
 		);
@@ -70,32 +70,15 @@ var APP = React.createClass({
 		var _self = this;
 		this.props.apod.get(undefined, function(d){
 			_self.setState({date: new Date(d.date)});
-			_self.updateImage(d);
+			_self.updateData(d);
 		});
-		this.preloadNext();
 	},
 	loadEntry(_date) {
-		this.props.apod.get(_date, this.updateImage);
+		this.props.apod.get(_date, this.updateData);
 		this.setState({date: new Date(_date)});
 	},
-	updateImage(_data){
-		this.setState({sdurl: _data.sdurl});
-		this.preloadNext();
-	},
-	preloadNext() {
-		var _self = this;
-		var prevDate = new Date(this.state.date);
-		var nextDate = new Date(this.state.date);
-		prevDate.setDate(prevDate.getDate() - 1);
-		nextDate.setDate(nextDate.getDate() + 1);
-		this.props.apod.get(prevDate, function(d){
-			var tempImage = new Image();
-			tempImage.src = d.sdurl;
-		});
-		this.props.apod.get(nextDate, function(d){
-			var tempImage = new Image();
-			tempImage.src = d.sdurl;
-		});
+	updateData(_data){
+		this.setState({data: _data});
 	},
 	onIMGLoad(){
 	}

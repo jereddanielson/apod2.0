@@ -4,9 +4,9 @@
 	it will be easier to modify this interface than hunting down
 	API calls in the main application.
 
-	TODO:
-	In the future this will be extended to utilize localStorage
-	to cache API requests and check localStorage before querying.
+	The module caches data fetched from previous API calls,
+	including the image elements, to both save on unnecessary API
+	calls and to increase speed.
 
 	Copyright (C) 2016 Jered Cahill Danielson jered@uw.edu
 
@@ -24,6 +24,15 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/*
+	TODOS:
+	- Keep track of inprogress requests in a Map and discard duplicate requests
+*/
+
+import React from "react"
+import Image from "../Components/Image"
+import Video from "../Components/Video"
+
 var APOD = function(){
 	var _KEY = "mwTWt97WoV91jHjbgdnjNbYSx9WtAZ91ZBfGUkIl";
 	var _URL = "https://api.nasa.gov/planetary/apod?hd=true&api_key=" + _KEY;
@@ -38,7 +47,7 @@ var APOD = function(){
 	@param {function} onSuccess - Callback for successful API retrieval
 	@param {function} [onFail] - Callback for failure
 	*/
-	this.get = function(date, onSuccess = function(d){console.log("No onSuccess specified.", d)}, onFail = function(d){console.log("No onFail specified.", d)}){
+	this.get = function(date, onSuccess = function(d){}, onFail = function(d){console.log(d)}){
 		// first check to see if we have an entry for this in "data"
 		if(date !== undefined && dataCache.has(dateString)){
 			// load from "data"
@@ -73,6 +82,7 @@ var APOD = function(){
 		ret.title = data.title;
 		ret.sdurl = data.url;
 		ret.fetchtime = Date.now();
+		ret.reactElement = (ret.mediatype === "image") ? <Image imgsrc={ret.sdurl} /> : <Video vidsrc={ret.sdurl} />;
 		dataCache.set(ret.date, ret);
 		callOnSuccess(ret);
 	}
@@ -85,6 +95,15 @@ var APOD = function(){
 	function onError(e, callOnFail, _dateString){
 		console.log("Error retrieving data from NASA APOD API.");
 		callOnFail(e);
+	}
+
+	/*
+	Preload an asset, doing nothing with the returned data
+	except for adding it to dataCache.
+	@param {Date} string - The Date to preload data for
+	*/
+	this.preload = function(_date){
+		this.get(_date);
 	}
 }
 
