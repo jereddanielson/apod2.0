@@ -47,12 +47,13 @@ var APOD = function(){
 	@param {function} onSuccess - Callback for successful API retrieval
 	@param {function} [onFail] - Callback for failure
 	*/
-	this.get = function(date, onSuccess = function(d){}, onFail = function(d){console.log(d)}){
+	this.get = function(date, onSuccess = function(d){}, onFail = function(d){}){
 		// first check to see if we have an entry for this in "data"
+
+		// key date string for looking up date
+		var dateString = (date !== undefined) ? date.toJSON().substring(0, 10) : undefined;
 		if(date !== undefined && dataCache.has(dateString)){
 			// load from "data"
-			// key date string for looking up date
-			var dateString = date.toJSON().substring(0, 10);
 			onSuccess(dataCache.get(dateString));
 		} else {
 			// load from API
@@ -61,7 +62,7 @@ var APOD = function(){
 				onGetComplete(data, onSuccess);
 			},
 			error: function(e){
-				onError(e, onFail);
+				onError(e, onFail, dateString);
 			}});
 		}
 	};
@@ -92,8 +93,8 @@ var APOD = function(){
 	@param {object} e - Error data from the APOD API
 	@param {function} callOnFail - Callback
 	*/
-	function onError(e, callOnFail, _dateString){
-		console.log("Error retrieving data from NASA APOD API.");
+	function onError(e, callOnFail, _dateString = Date.now()){
+		console.log("Error retrieving data from NASA APOD API. '"+_dateString+"' probably does not exist (yet!)");
 		callOnFail(e);
 	}
 
@@ -101,9 +102,18 @@ var APOD = function(){
 	Preload an asset, doing nothing with the returned data
 	except for adding it to dataCache.
 	@param {Date} string - The Date to preload data for
+	@param {function} onSuccess - Callback for successful API retrieval
+	@param {function} [onFail] - Callback for failure
 	*/
-	this.preload = function(_date){
-		this.get(_date);
+	this.preload = function(_date, onSuccess, onFail){
+		this.get(_date, function(d){
+			var img = document.createElement("img");
+			img.src = d.sdurl;
+		}, onFail);
+	}
+
+	this.getCacheSize = function() {
+		return dataCache.size;
 	}
 }
 

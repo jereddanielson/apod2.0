@@ -27,6 +27,17 @@ import SideBar from "./components/SideBar"
 import ImageBox from "./components/ImageBox"
 import FilmStrip from "./components/FilmStrip"
 
+Date.prototype.nextDate = function(){
+	var nextDate = new Date(this);
+	nextDate.setDate(nextDate.getDate() + 1);
+	return nextDate;
+}
+Date.prototype.prevDate = function(){
+	var prevDate = new Date(this);
+	prevDate.setDate(prevDate.getDate() - 1);
+	return prevDate;
+}
+
 var APP = React.createClass({
 	getInitialState() {
 		return {date: new Date(), data: {}};
@@ -37,15 +48,11 @@ var APP = React.createClass({
 			switch(e.keyCode){
 				case 37: // left
 					// load previous date
-					var prevDate = new Date(this.state.date);
-					prevDate.setDate(prevDate.getDate() - 1);
-					this.loadEntry(prevDate);
+					this.loadEntry(this.state.date.prevDate());
 					break;
 				case 39: // right
 					// load next date
-					var nextDate = new Date(this.state.date);
-					nextDate.setDate(nextDate.getDate() + 1);
-					this.loadEntry(nextDate);
+					this.loadEntry(this.state.date.nextDate());
 					break;
 			}
 		}
@@ -79,6 +86,8 @@ var APP = React.createClass({
 	},
 	updateData(_data){
 		this.setState({data: _data});
+		this.props.apod.preload(this.state.date.nextDate());
+		this.props.apod.preload(this.state.date.prevDate());
 	},
 	onIMGLoad(){
 	}

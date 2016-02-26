@@ -76,6 +76,35 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	Date.prototype.nextDate = function () {
+		var nextDate = new Date(this);
+		nextDate.setDate(nextDate.getDate() + 1);
+		return nextDate;
+	}; /*
+	   	This is the entry point into the APOD 2.0 application.
+	   
+	   	Copyright (C) 2016 Jered Cahill Danielson jered@uw.edu
+	   
+	   	This program is free software: you can redistribute it and/or modify
+	   	it under the terms of the GNU General Public License as published by
+	   	the Free Software Foundation, either version 3 of the License, or
+	   	(at your option) any later version.
+	   
+	   	This program is distributed in the hope that it will be useful,
+	   	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	   	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	   	GNU General Public License for more details.
+	   
+	   	You should have received a copy of the GNU General Public License
+	   	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	   */
+
+	Date.prototype.prevDate = function () {
+		var prevDate = new Date(this);
+		prevDate.setDate(prevDate.getDate() - 1);
+		return prevDate;
+	};
+
 	var APP = _react2.default.createClass({
 		displayName: "APP",
 		getInitialState: function getInitialState() {
@@ -88,16 +117,12 @@
 					case 37:
 						// left
 						// load previous date
-						var prevDate = new Date(this.state.date);
-						prevDate.setDate(prevDate.getDate() - 1);
-						this.loadEntry(prevDate);
+						this.loadEntry(this.state.date.prevDate());
 						break;
 					case 39:
 						// right
 						// load next date
-						var nextDate = new Date(this.state.date);
-						nextDate.setDate(nextDate.getDate() + 1);
-						this.loadEntry(nextDate);
+						this.loadEntry(this.state.date.nextDate());
 						break;
 				}
 			}
@@ -135,26 +160,11 @@
 		},
 		updateData: function updateData(_data) {
 			this.setState({ data: _data });
+			this.props.apod.preload(this.state.date.nextDate());
+			this.props.apod.preload(this.state.date.prevDate());
 		},
 		onIMGLoad: function onIMGLoad() {}
-	}); /*
-	    	This is the entry point into the APOD 2.0 application.
-	    
-	    	Copyright (C) 2016 Jered Cahill Danielson jered@uw.edu
-	    
-	    	This program is free software: you can redistribute it and/or modify
-	    	it under the terms of the GNU General Public License as published by
-	    	the Free Software Foundation, either version 3 of the License, or
-	    	(at your option) any later version.
-	    
-	    	This program is distributed in the hope that it will be useful,
-	    	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	    	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	    	GNU General Public License for more details.
-	    
-	    	You should have received a copy of the GNU General Public License
-	    	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	    */
+	});
 
 	_reactDom2.default.render(_react2.default.createElement(APP, { apod: new _APOD2.default() }), document.getElementById("app-container"));
 
@@ -19795,15 +19805,14 @@
 	 */
 		this.get = function (date) {
 			var onSuccess = arguments.length <= 1 || arguments[1] === undefined ? function (d) {} : arguments[1];
-			var onFail = arguments.length <= 2 || arguments[2] === undefined ? function (d) {
-				console.log(d);
-			} : arguments[2];
+			var onFail = arguments.length <= 2 || arguments[2] === undefined ? function (d) {} : arguments[2];
 
 			// first check to see if we have an entry for this in "data"
+
+			// key date string for looking up date
+			var dateString = date !== undefined ? date.toJSON().substring(0, 10) : undefined;
 			if (date !== undefined && dataCache.has(dateString)) {
 				// load from "data"
-				// key date string for looking up date
-				var dateString = date.toJSON().substring(0, 10);
 				onSuccess(dataCache.get(dateString));
 			} else {
 				// load from API
@@ -19812,7 +19821,7 @@
 						onGetComplete(data, onSuccess);
 					},
 					error: function error(e) {
-						onError(e, onFail);
+						onError(e, onFail, dateString);
 					} });
 			}
 		};
@@ -19843,8 +19852,10 @@
 	 @param {object} e - Error data from the APOD API
 	 @param {function} callOnFail - Callback
 	 */
-		function onError(e, callOnFail, _dateString) {
-			console.log("Error retrieving data from NASA APOD API.");
+		function onError(e, callOnFail) {
+			var _dateString = arguments.length <= 2 || arguments[2] === undefined ? Date.now() : arguments[2];
+
+			console.log("Error retrieving data from NASA APOD API. '" + _dateString + "' probably does not exist");
 			callOnFail(e);
 		}
 
@@ -19852,9 +19863,18 @@
 	 Preload an asset, doing nothing with the returned data
 	 except for adding it to dataCache.
 	 @param {Date} string - The Date to preload data for
+	 @param {function} onSuccess - Callback for successful API retrieval
+	 @param {function} [onFail] - Callback for failure
 	 */
-		this.preload = function (_date) {
-			this.get(_date);
+		this.preload = function (_date, onSuccess, onFail) {
+			this.get(_date, function (d) {
+				var img = document.createElement("img");
+				img.src = d.sdurl;
+			}, onFail);
+		};
+
+		this.getCacheSize = function () {
+			return dataCache.size;
 		};
 	}; /*
 	   	This is the APOD module. Its purpose is to handle interactions
