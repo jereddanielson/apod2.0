@@ -69,7 +69,7 @@ var APP = React.createClass({
 				<Menu />
 				<SideBar />
 				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>
-				<FilmStrip initialDate={this.state.date}/>
+				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.date}/>
 			</div>
 		);
 	},
