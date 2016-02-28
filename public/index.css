@@ -2,7 +2,7 @@ body {
 	margin: 0;
 }
 
-img {
+.image img {
 	display: block;
 }
 
@@ -31,16 +31,14 @@ img {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	background: rgba(255, 255, 255, .3);
-	min-width: 200px;
-	min-height: 200px;
 }
 
 #filmstrip {
 	width: 100vw;
-	height: 20vh;
-	min-height: 120px;
+	height: 60px;
 	bottom: 0;
 	background: rgba(200, 220, 255, .2);
+	border-top: 1px solid white;
 }
 
 .abs-pos {
@@ -48,7 +46,5 @@ img {
 }
 
 .image {
-	min-width: 100px;
-	min-height: 100px;
 	background: rgba(100, 200, 150, .2);
 }

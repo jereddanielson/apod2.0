@@ -65,18 +65,19 @@ var APP = React.createClass({
 	},
 	render() {
 		return (
-			<div id="app" className="abs-pos">
+			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}}>
 				<Menu />
 				<SideBar />
 				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>
-				<FilmStrip />
+				<FilmStrip initialDate={this.state.date}/>
 			</div>
 		);
 	},
 	loadInitialImage(){
 		var _self = this;
 		this.props.apod.get(undefined, function(d){
-			_self.setState({date: new Date(d.date)});
+			var curDate = new Date(d.date);
+			_self.setState({date: curDate});
 			_self.updateData(d);
 		});
 	},

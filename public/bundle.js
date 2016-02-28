@@ -136,7 +136,9 @@
 		render: function render() {
 			return _react2.default.createElement(
 				"div",
-				{ id: "app", className: "abs-pos" },
+				{ id: "app", className: "abs-pos", onWheel: function onWheel(e) {
+						e.preventDefault();
+					} },
 				_react2.default.createElement(_Menu2.default, null),
 				_react2.default.createElement(_SideBar2.default, null),
 				_react2.default.createElement(
@@ -144,13 +146,14 @@
 					{ onIMGLoad: this.onIMGLoad },
 					this.state.data.reactElement
 				),
-				_react2.default.createElement(_FilmStrip2.default, null)
+				_react2.default.createElement(_FilmStrip2.default, { initialDate: this.state.date })
 			);
 		},
 		loadInitialImage: function loadInitialImage() {
 			var _self = this;
 			this.props.apod.get(undefined, function (d) {
-				_self.setState({ date: new Date(d.date) });
+				var curDate = new Date(d.date);
+				_self.setState({ date: curDate });
 				_self.updateData(d);
 			});
 		},
@@ -19855,7 +19858,7 @@
 		function onError(e, callOnFail) {
 			var _dateString = arguments.length <= 2 || arguments[2] === undefined ? Date.now() : arguments[2];
 
-			console.log("Error retrieving data from NASA APOD API. '" + _dateString + "' probably does not exist");
+			console.log("Error retrieving data from NASA APOD API. '" + _dateString + "' probably does not exist (yet!)");
 			callOnFail(e);
 		}
 
@@ -20040,16 +20043,67 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Thumbnail = __webpack_require__(166);
+
+	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var FilmStrip = _react2.default.createClass({
 		displayName: "FilmStrip",
+		handleWheel: function handleWheel(e) {
+			var scrollAmount = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : -e.deltaY;
+			this.setState({ scrollPos: this.state.scrollPos + scrollAmount });
+		},
+		getInitialState: function getInitialState() {
+			return { scrollPos: 0 };
+		},
+		componentDidMount: function componentDidMount() {
+			this.setState({ initialDate: this.props.initialDate });
+		},
 		render: function render() {
-			return _react2.default.createElement("div", { id: "filmstrip", className: "abs-pos" });
+			var docWidth = document.documentElement.clientWidth;
+
+			return _react2.default.createElement(
+				"div",
+				{ id: "filmstrip", className: "abs-pos", onWheel: this.handleWheel },
+				_react2.default.createElement(
+					"div",
+					{ style: { transform: "translateX(" + this.state.scrollPos + "px)" } },
+					_react2.default.createElement(_Thumbnail2.default, { position: -1, dateString: "2016-02-20" }),
+					_react2.default.createElement(_Thumbnail2.default, { position: 0, dateString: "2016-02-21" }),
+					_react2.default.createElement(_Thumbnail2.default, { position: 1, dateString: "2016-02-22" })
+				)
+			);
 		}
 	});
 
 	module.exports = FilmStrip;
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Thumbnail = _react2.default.createClass({
+		displayName: "Thumbnail",
+		render: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ style: { width: "60px", height: "60px", position: "absolute", left: "50%", transform: "translateX(" + (this.props.position * 60 - 30) + "px)" } },
+				_react2.default.createElement("img", { style: { top: "30px", left: "30px", transform: "translate(-50%, -50%)", display: "block", position: "absolute" }, src: "http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 10) + ".jpg" })
+			);
+		}
+	});
+
+	module.exports = Thumbnail;
 
 /***/ }
 /******/ ]);
