@@ -20064,7 +20064,7 @@
 			return { scrollPos: initD.getTime(), initialTime: initD.getTime() };
 		},
 		render: function render() {
-			var dateStrs = [];
+			var dateArr = [];
 			var dateMarker = new Date(this.props.initialDate);
 			var scrollDate = new Date(this.state.scrollPos);
 			scrollDate.setHours(0);
@@ -20073,8 +20073,10 @@
 			scrollDate.setMilliseconds(0);
 			for (var i = -13; i < 13; i++) {
 				dateMarker.setTime(scrollDate.getTime() + i * 86400000);
-				dateStrs.push(dateMarker.toJSON().substring(0, 10));
+				dateArr.push({ index: i, dateString: dateMarker.toJSON().substring(0, 10) });
 			}
+
+			var self = this;
 
 			return _react2.default.createElement(
 				"div",
@@ -20082,32 +20084,9 @@
 				_react2.default.createElement(
 					"div",
 					{ style: { transform: "translateX(" + -((this.state.scrollPos - this.state.initialTime) / 1440000) % 60 + "px)" } },
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -12, dateString: dateStrs[0] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -11, dateString: dateStrs[1] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -10, dateString: dateStrs[2] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -9, dateString: dateStrs[3] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -8, dateString: dateStrs[4] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -7, dateString: dateStrs[5] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -6, dateString: dateStrs[6] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -5, dateString: dateStrs[7] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -4, dateString: dateStrs[8] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -3, dateString: dateStrs[9] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -2, dateString: dateStrs[10] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: -1, dateString: dateStrs[11] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 0, dateString: dateStrs[12] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 1, dateString: dateStrs[13] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 2, dateString: dateStrs[14] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 3, dateString: dateStrs[15] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 4, dateString: dateStrs[16] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 5, dateString: dateStrs[17] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 6, dateString: dateStrs[18] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 7, dateString: dateStrs[19] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 8, dateString: dateStrs[20] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 9, dateString: dateStrs[21] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 10, dateString: dateStrs[22] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 11, dateString: dateStrs[23] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 12, dateString: dateStrs[24] }),
-					_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, position: 13, dateString: dateStrs[25] })
+					dateArr.map(function (ea) {
+						return _react2.default.createElement(_Thumbnail2.default, { key: ea.dateString + "thumb", position: ea.index, dateString: ea.dateString, loadEntry: self.props.loadEntry });
+					})
 				)
 			);
 		}
@@ -20135,7 +20114,7 @@
 		render: function render() {
 			return _react2.default.createElement(
 				"div",
-				{ onClick: this.handleClick, style: { width: "60px", height: "60px", position: "absolute", left: "50%", transform: "translateX(" + (this.props.position * 60 - 30) + "px)" } },
+				{ onClick: this.handleClick, style: { width: "60px", height: "60px", position: "relative", display: "inline-block" } },
 				_react2.default.createElement("img", { style: { top: "30px", left: "30px", transform: "translate(-50%, -50%)", display: "block", position: "absolute" }, src: "http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg" })
 			);
 		}
