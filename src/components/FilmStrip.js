@@ -23,7 +23,7 @@ var FilmStrip = React.createClass({
 		scrollDate.setMinutes(0);
 		scrollDate.setSeconds(0);
 		scrollDate.setMilliseconds(0);
-		for(var i = -30; i < 30; i++){
+		for(var i = -10; i < 10; i++){
 			dateMarker.setTime(scrollDate.getTime() + (i * 86400000));
 			dateArr.push({index: i, dateString: dateMarker.toJSON().substring(0, 10)});
 		}
