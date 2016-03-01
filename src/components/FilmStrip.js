@@ -1,8 +1,10 @@
 import React from "react"
+import ReactDOM from "react-dom"
 
-import Thumbnail from "./Thumbnail"
+import Chunk from "./Chunk"
 
 var FilmStrip = React.createClass({
+	chunkSize: 30,
 	handleWheel(e){
 		var scrollAmount = -e.deltaX;
 		this.setState({scrollPos: Math.min(this.state.scrollPos + (scrollAmount * 1440000), this.state.initialTime)});
@@ -13,30 +15,21 @@ var FilmStrip = React.createClass({
 		initD.setMinutes(0);
 		initD.setSeconds(0);
 		initD.setMilliseconds(0);
-		return {scrollPos: initD.getTime(), initialTime: initD.getTime()};
+		return {scrollPos: initD.getTime(), initialTime: initD.getTime(), chunks: []};
+	},
+	componentWillMount() {
+		var timeStamp = this.props.initialDate.getTime();
+		this.setState({chunks: [<Chunk loadEntry={this.props.loadEntry} key={timeStamp} chunkSize={this.chunkSize} timeStamp={timeStamp} />]})
+	},
+	componentDidMount() {
+		ReactDOM.findDOMNode(this).scrollLeft = 999999999;
 	},
 	render() {
-		var dateArr = [];
-		var dateMarker = new Date(this.props.initialDate);
-		var scrollDate = new Date(this.state.scrollPos);
-		scrollDate.setHours(0);
-		scrollDate.setMinutes(0);
-		scrollDate.setSeconds(0);
-		scrollDate.setMilliseconds(0);
-		for(var i = -30; i < 30; i++){
-			dateMarker.setTime(scrollDate.getTime() + (i * 86400000));
-			dateArr.push({index: i, dateString: dateMarker.toJSON().substring(0, 10)});
-		}
-
 		var self = this;
 
 		return (
-			<div id="filmstrip" className="abs-pos" onWheel={this.handleWheel}>
-				<div style={{transform: "translateX("+((-(((this.state.scrollPos + 1440000) - this.state.initialTime) / 1440000)) % 60 - 60)+"px)"}}>
-					{dateArr.map(function(ea){
-						return <Thumbnail key={ea.dateString + "thumb"} dateString={ea.dateString} loadEntry={self.props.loadEntry} />
-					})}
-				</div>
+			<div style={{overflowX: "scroll"}} id="filmstrip" className="abs-pos" onWheel={this.handleWheel}>
+				{this.state.chunks}
 			</div>
 		);
 	}

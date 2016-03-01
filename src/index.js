@@ -65,7 +65,7 @@ var APP = React.createClass({
 	},
 	render() {
 		return (
-			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}}>
+			<div id="app" className="abs-pos">
 				<Menu />
 				<SideBar />
 				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>

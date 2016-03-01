@@ -136,9 +136,7 @@
 		render: function render() {
 			return _react2.default.createElement(
 				"div",
-				{ id: "app", className: "abs-pos", onWheel: function onWheel(e) {
-						e.preventDefault();
-					} },
+				{ id: "app", className: "abs-pos" },
 				_react2.default.createElement(_Menu2.default, null),
 				_react2.default.createElement(_SideBar2.default, null),
 				_react2.default.createElement(
@@ -20043,14 +20041,20 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Thumbnail = __webpack_require__(166);
+	var _reactDom = __webpack_require__(158);
 
-	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _Chunk = __webpack_require__(166);
+
+	var _Chunk2 = _interopRequireDefault(_Chunk);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var FilmStrip = _react2.default.createClass({
 		displayName: "FilmStrip",
+
+		chunkSize: 30,
 		handleWheel: function handleWheel(e) {
 			var scrollAmount = -e.deltaX;
 			this.setState({ scrollPos: Math.min(this.state.scrollPos + scrollAmount * 1440000, this.state.initialTime) });
@@ -20061,33 +20065,22 @@
 			initD.setMinutes(0);
 			initD.setSeconds(0);
 			initD.setMilliseconds(0);
-			return { scrollPos: initD.getTime(), initialTime: initD.getTime() };
+			return { scrollPos: initD.getTime(), initialTime: initD.getTime(), chunks: [] };
+		},
+		componentWillMount: function componentWillMount() {
+			var timeStamp = this.props.initialDate.getTime();
+			this.setState({ chunks: [_react2.default.createElement(_Chunk2.default, { loadEntry: this.props.loadEntry, key: timeStamp, chunkSize: this.chunkSize, timeStamp: timeStamp })] });
+		},
+		componentDidMount: function componentDidMount() {
+			_reactDom2.default.findDOMNode(this).scrollLeft = 999999999;
 		},
 		render: function render() {
-			var dateArr = [];
-			var dateMarker = new Date(this.props.initialDate);
-			var scrollDate = new Date(this.state.scrollPos);
-			scrollDate.setHours(0);
-			scrollDate.setMinutes(0);
-			scrollDate.setSeconds(0);
-			scrollDate.setMilliseconds(0);
-			for (var i = -30; i < 30; i++) {
-				dateMarker.setTime(scrollDate.getTime() + i * 86400000);
-				dateArr.push({ index: i, dateString: dateMarker.toJSON().substring(0, 10) });
-			}
-
 			var self = this;
 
 			return _react2.default.createElement(
 				"div",
-				{ id: "filmstrip", className: "abs-pos", onWheel: this.handleWheel },
-				_react2.default.createElement(
-					"div",
-					{ style: { transform: "translateX(" + (-((this.state.scrollPos + 1440000 - this.state.initialTime) / 1440000) % 60 - 60) + "px)" } },
-					dateArr.map(function (ea) {
-						return _react2.default.createElement(_Thumbnail2.default, { key: ea.dateString + "thumb", dateString: ea.dateString, loadEntry: self.props.loadEntry });
-					})
-				)
+				{ style: { overflowX: "scroll" }, id: "filmstrip", className: "abs-pos", onWheel: this.handleWheel },
+				this.state.chunks
 			);
 		}
 	});
@@ -20096,6 +20089,47 @@
 
 /***/ },
 /* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Thumbnail = __webpack_require__(167);
+
+	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Chunk = _react2.default.createClass({
+		displayName: "Chunk",
+		getInitialState: function getInitialState() {
+			var thumbArr = [];
+			var dateMarker = this.props.timeStamp - this.props.chunkSize * 86400000;
+			var endTime = this.props.timeStamp;
+			while (dateMarker < endTime) {
+				var date = new Date(dateMarker);
+				thumbArr.push(_react2.default.createElement(_Thumbnail2.default, { loadEntry: this.props.loadEntry, key: date.toJSON().substring(0, 10), dateString: date.toJSON() }));
+				dateMarker += 86400000;
+			}
+
+			return { thumbnails: thumbArr };
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				"div",
+				{ style: { fontSize: 0, whiteSpace: "nowrap" } },
+				this.state.thumbnails
+			);
+		}
+	});
+
+	module.exports = Chunk;
+
+/***/ },
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
