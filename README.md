@@ -19,6 +19,4 @@ Clone repo
 Install with npm
 > `~ npm install`
 
-Copyright Jered Danielson
-GNU GPL v3.0
-2016
+Copyright Jered Danielson, GNU GPL v3.0, 2016
