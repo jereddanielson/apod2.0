@@ -20053,7 +20053,7 @@
 		displayName: "FilmStrip",
 		handleWheel: function handleWheel(e) {
 			var scrollAmount = -e.deltaX;
-			this.setState({ scrollPos: this.state.scrollPos + scrollAmount * 1440000 });
+			this.setState({ scrollPos: Math.min(this.state.scrollPos + scrollAmount * 1440000, this.state.initialTime) });
 		},
 		getInitialState: function getInitialState() {
 			var initD = new Date(this.props.initialDate.getTime());
@@ -20071,7 +20071,7 @@
 			scrollDate.setMinutes(0);
 			scrollDate.setSeconds(0);
 			scrollDate.setMilliseconds(0);
-			for (var i = -13; i < 13; i++) {
+			for (var i = -30; i < 30; i++) {
 				dateMarker.setTime(scrollDate.getTime() + i * 86400000);
 				dateArr.push({ index: i, dateString: dateMarker.toJSON().substring(0, 10) });
 			}
@@ -20083,9 +20083,9 @@
 				{ id: "filmstrip", className: "abs-pos", onWheel: this.handleWheel },
 				_react2.default.createElement(
 					"div",
-					{ style: { transform: "translateX(" + -((this.state.scrollPos - this.state.initialTime) / 1440000) % 60 + "px)" } },
+					{ style: { transform: "translateX(" + (-((this.state.scrollPos + 1440000 - this.state.initialTime) / 1440000) % 60 - 60) + "px)" } },
 					dateArr.map(function (ea) {
-						return _react2.default.createElement(_Thumbnail2.default, { key: ea.dateString + "thumb", position: ea.index, dateString: ea.dateString, loadEntry: self.props.loadEntry });
+						return _react2.default.createElement(_Thumbnail2.default, { key: ea.dateString + "thumb", dateString: ea.dateString, loadEntry: self.props.loadEntry });
 					})
 				)
 			);

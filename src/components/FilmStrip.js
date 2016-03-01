@@ -5,7 +5,7 @@ import Thumbnail from "./Thumbnail"
 var FilmStrip = React.createClass({
 	handleWheel(e){
 		var scrollAmount = -e.deltaX;
-		this.setState({scrollPos: this.state.scrollPos + (scrollAmount * 1440000)});
+		this.setState({scrollPos: Math.min(this.state.scrollPos + (scrollAmount * 1440000), this.state.initialTime)});
 	},
 	getInitialState() {
 		var initD = new Date(this.props.initialDate.getTime());
@@ -23,7 +23,7 @@ var FilmStrip = React.createClass({
 		scrollDate.setMinutes(0);
 		scrollDate.setSeconds(0);
 		scrollDate.setMilliseconds(0);
-		for(var i = -13; i < 13; i++){
+		for(var i = -30; i < 30; i++){
 			dateMarker.setTime(scrollDate.getTime() + (i * 86400000));
 			dateArr.push({index: i, dateString: dateMarker.toJSON().substring(0, 10)});
 		}
@@ -32,9 +32,9 @@ var FilmStrip = React.createClass({
 
 		return (
 			<div id="filmstrip" className="abs-pos" onWheel={this.handleWheel}>
-				<div style={{transform: "translateX("+((-((this.state.scrollPos - this.state.initialTime) / 1440000)) % 60)+"px)"}}>
+				<div style={{transform: "translateX("+((-(((this.state.scrollPos + 1440000) - this.state.initialTime) / 1440000)) % 60 - 60)+"px)"}}>
 					{dateArr.map(function(ea){
-						return <Thumbnail key={ea.dateString + "thumb"} position={ea.index} dateString={ea.dateString} loadEntry={self.props.loadEntry} />
+						return <Thumbnail key={ea.dateString + "thumb"} dateString={ea.dateString} loadEntry={self.props.loadEntry} />
 					})}
 				</div>
 			</div>
