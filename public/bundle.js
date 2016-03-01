@@ -20043,6 +20043,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
 	var _Thumbnail = __webpack_require__(166);
 
 	var _Thumbnail2 = _interopRequireDefault(_Thumbnail);
@@ -20053,28 +20057,37 @@
 		displayName: "FilmStrip",
 		handleWheel: function handleWheel(e) {
 			var scrollAmount = -e.deltaX;
-			this.setState({ scrollPos: Math.min(this.state.scrollPos + scrollAmount * 1440000, this.state.initialTime) });
+			this.setState({ scrollPos: Math.min(this.state.scrollPos + scrollAmount, 0) });
 		},
 		getInitialState: function getInitialState() {
-			var initD = new Date(this.props.initialDate.getTime());
-			initD.setHours(0);
-			initD.setMinutes(0);
-			initD.setSeconds(0);
-			initD.setMilliseconds(0);
-			return { scrollPos: initD.getTime(), initialTime: initD.getTime() };
+			return { scrollPos: 0, range: 1 };
+		},
+		componentDidMount: function componentDidMount() {
+			this.setState({ range: Math.ceil(_reactDom2.default.findDOMNode(this).clientWidth / 60) });
 		},
 		render: function render() {
 			var dateArr = [];
 			var dateMarker = new Date(this.props.initialDate);
-			var scrollDate = new Date(this.state.scrollPos);
-			scrollDate.setHours(0);
-			scrollDate.setMinutes(0);
-			scrollDate.setSeconds(0);
-			scrollDate.setMilliseconds(0);
-			for (var i = -30; i < 30; i++) {
-				dateMarker.setTime(scrollDate.getTime() + i * 86400000);
-				dateArr.push({ index: i, dateString: dateMarker.toJSON().substring(0, 10) });
+			var dayFromScroll = Math.ceil(this.state.scrollPos / 60);
+			dateMarker.setDate(dateMarker.getDate() + dayFromScroll - this.state.range);
+			for (var i = 0; i < this.state.range; i++) {
+				dateMarker.setDate(dateMarker.getDate() + 1);
+				dateArr.push(dateMarker.toJSON().substring(2, 10));
 			}
+
+			/*
+	  var dateArr = [];
+	  var dateMarker = new Date(this.props.initialDate);
+	  var scrollDate = new Date(this.state.scrollPos * 1440000 + this.state.initialTime);
+	  scrollDate.setHours(12);
+	  scrollDate.setMinutes(0);
+	  scrollDate.setSeconds(0);
+	  scrollDate.setMilliseconds(0);
+	  for(var i = -10; i < 10; i++){
+	  	dateMarker.setTime(scrollDate.getTime() + (i * 86400000));
+	  	dateArr.push({index: i, dateString: dateMarker.toJSON().substring(0, 10)});
+	  }
+	  */
 
 			var self = this;
 
@@ -20083,9 +20096,9 @@
 				{ id: "filmstrip", className: "abs-pos", onWheel: this.handleWheel },
 				_react2.default.createElement(
 					"div",
-					{ style: { transform: "translateX(" + (-((this.state.scrollPos + 1440000 - this.state.initialTime) / 1440000) % 60 - 60) + "px)" } },
-					dateArr.map(function (ea) {
-						return _react2.default.createElement(_Thumbnail2.default, { key: ea.dateString + "thumb", dateString: ea.dateString, loadEntry: self.props.loadEntry });
+					{ style: { transform: "translateX(" + (-this.state.scrollPos % 60 - 60) + "px)" } },
+					dateArr.map(function (dateString) {
+						return _react2.default.createElement(_Thumbnail2.default, { key: dateString + "thumb", dateString: dateString, loadEntry: self.props.loadEntry });
 					})
 				)
 			);
@@ -20111,11 +20124,14 @@
 		handleClick: function handleClick() {
 			this.props.loadEntry(new Date(this.props.dateString));
 		},
+		shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+			return false;
+		},
 		render: function render() {
 			return _react2.default.createElement(
 				"div",
 				{ onClick: this.handleClick, style: { width: "60px", height: "60px", position: "relative", display: "inline-block" } },
-				_react2.default.createElement("img", { style: { top: "30px", left: "30px", transform: "translate(-50%, -50%)", display: "block", position: "absolute" }, src: "http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg" })
+				_react2.default.createElement("img", { style: { top: "30px", left: "30px", transform: "translate(-50%, -50%)", display: "block", position: "absolute" }, src: "http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "") + ".jpg" })
 			);
 		}
 	});
