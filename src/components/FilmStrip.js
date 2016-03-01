@@ -12,7 +12,8 @@ var FilmStrip = React.createClass({
 		return {scrollPos: 0, range: 1};
 	},
 	componentDidMount() {
-		this.setState({range: Math.ceil(ReactDOM.findDOMNode(this).clientWidth / 60)})
+		var thisWidth = ReactDOM.findDOMNode(this).clientWidth;
+		this.setState({range: Math.ceil(thisWidth / 60 + 1), width: thisWidth})
 	},
 	render() {
 		var dateArr = [];
@@ -21,7 +22,7 @@ var FilmStrip = React.createClass({
 		dateMarker.setDate(dateMarker.getDate() + dayFromScroll - this.state.range);
 		for(var i = 0; i < this.state.range; i++){
 			dateMarker.setDate(dateMarker.getDate() + 1);
-			dateArr.push(dateMarker.toJSON().substring(2, 10));
+			dateArr.push(dateMarker.toJSON().substring(0, 10));
 		}
 
 		/*

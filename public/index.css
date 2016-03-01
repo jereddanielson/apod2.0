@@ -39,6 +39,8 @@ body {
 	bottom: 0;
 	background: rgba(200, 220, 255, .2);
 	border-top: 1px solid white;
+	white-space: nowrap;
+	font-size: 0;
 }
 
 .abs-pos {

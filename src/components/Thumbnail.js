@@ -1,6 +1,19 @@
 import React from 'react';
 
 var Thumbnail = React.createClass({
+	divStyle: {
+		width: "60px", 
+		height: "60px", 
+		position: "relative", 
+		display: "inline-block"
+	},
+	imgStyle: {
+		top: "30px", 
+		left: "30px", 
+		transform: "translate(-50%, -50%)", 
+		display: "block", 
+		position: "absolute"
+	},
 	handleClick(){
 		this.props.loadEntry(new Date(this.props.dateString));
 	},
@@ -9,8 +22,8 @@ var Thumbnail = React.createClass({
 	},
 	render() {
 		return (
-			<div onClick={this.handleClick} style={{width: "60px", height: "60px", position: "relative", display: "inline-block"}}>
-				<img style={{top: "30px", left: "30px", transform: "translate(-50%, -50%)", display: "block", position: "absolute"}} src={"http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "") + ".jpg"} />
+			<div onClick={this.handleClick} style={this.divStyle}>
+				<img style={this.imgStyle} onDragStart={function(e){e.preventDefault();}} src={"http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg"} />
 			</div>
 		);
 	}

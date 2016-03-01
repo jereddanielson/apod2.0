@@ -40,7 +40,7 @@ Date.prototype.prevDate = function(){
 
 var APP = React.createClass({
 	getInitialState() {
-		return {date: new Date(), data: {}};
+		return {date: new Date(), initialDate: new Date(), data: {}};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -69,7 +69,7 @@ var APP = React.createClass({
 				<Menu />
 				<SideBar />
 				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>
-				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.date}/>
+				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.initialDate}/>
 			</div>
 		);
 	},
@@ -77,7 +77,7 @@ var APP = React.createClass({
 		var _self = this;
 		this.props.apod.get(undefined, function(d){
 			var curDate = new Date(d.date);
-			_self.setState({date: curDate});
+			_self.setState({date: curDate, initialDate: curDate});
 			_self.updateData(d);
 		});
 	},
