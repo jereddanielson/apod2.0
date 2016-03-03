@@ -22,7 +22,7 @@ var Thumbnail = React.createClass({
 	},
 	render() {
 		return (
-			<div onClick={this.handleClick} style={this.divStyle}>
+			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
 				<img style={this.imgStyle} onDragStart={function(e){e.preventDefault();}} src={"http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg"} />
 			</div>
 		);

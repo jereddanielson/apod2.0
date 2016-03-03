@@ -39,6 +39,11 @@ Date.prototype.prevDate = function(){
 }
 
 var APP = React.createClass({
+	style: {
+		width: "100vw",
+		height: "100vh",
+		background: "#000408"
+	},
 	getInitialState() {
 		return {date: new Date(), initialDate: new Date(), data: {}};
 	},
@@ -65,7 +70,7 @@ var APP = React.createClass({
 	},
 	render() {
 		return (
-			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}}>
+			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
 				<SideBar />
 				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>

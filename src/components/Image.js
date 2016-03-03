@@ -1,6 +1,12 @@
 import React from "react"
 
 var Image = React.createClass({
+	style: {
+		boxShadow: "0 0 100px #404448"
+	},
+	imgstyle: {
+		display: "block"
+	},
 	getInitialState() {
 		return {loaded: false};
 	},
@@ -14,9 +20,9 @@ var Image = React.createClass({
 	},
 	render() {
 		return (
-			<div className="image">
+			<div className="image" style={this.style}>
 				{(() => {if(this.state.loaded){
-					return <img src={this.props.imgsrc} />
+					return <img style={this.imgstyle} src={this.props.imgsrc} />
 				} else {
 					return <div style={{color: "white"}}>Loading...</div>
 				}})()}

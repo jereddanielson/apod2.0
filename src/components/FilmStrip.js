@@ -4,6 +4,16 @@ import ReactDOM from "react-dom"
 import Thumbnail from "./Thumbnail"
 
 var FilmStrip = React.createClass({
+	style: {
+		position: "absolute",
+		width: "100vw",
+		height: "60px",
+		bottom: 0,
+		background: "#101418",
+		borderTop: "1px solid #202428",
+		whiteSpace: "nowrap",
+		fontSize: 0
+	},
 	handleWheel(e){
 		var scrollAmount = -e.deltaX;
 		this.setState({scrollPos: Math.min(this.state.scrollPos + scrollAmount, 0)});
@@ -42,8 +52,8 @@ var FilmStrip = React.createClass({
 		var self = this;
 
 		return (
-			<div id="filmstrip" className="abs-pos" onWheel={this.handleWheel}>
-				<div style={{transform: "translateX("+(-this.state.scrollPos % 60 - 60)+"px)"}}>
+			<div id="filmstrip" onWheel={this.handleWheel} style={this.style}>
+				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
 						return <Thumbnail key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} />
 					})}

@@ -1,9 +1,12 @@
 import React from "react"
 
 var SideBar = React.createClass({
+	style: {
+		position: "absolute"
+	},
 	render() {
 		return (
-			<div id="sidebar" className="abs-pos"></div>
+			<div id="sidebar" style={this.style}></div>
 		);
 	}
 });
