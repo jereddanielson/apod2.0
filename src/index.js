@@ -26,6 +26,7 @@ import Menu from "./components/Menu"
 import SideBar from "./components/SideBar"
 import ImageBox from "./components/ImageBox"
 import FilmStrip from "./components/FilmStrip"
+import HiRes from "./components/HiRes"
 
 Date.prototype.nextDate = function(){
 	var nextDate = new Date(this);
@@ -45,7 +46,7 @@ var APP = React.createClass({
 		background: "#000408"
 	},
 	getInitialState() {
-		return {date: new Date(), initialDate: new Date(), data: {}};
+		return {date: new Date(), initialDate: new Date(), cutoffDate: new Date(), data: {}, showHiRes: false};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -73,8 +74,12 @@ var APP = React.createClass({
 			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
 				<SideBar />
-				<ImageBox onIMGLoad={this.onIMGLoad}>{this.state.data.reactElement}</ImageBox>
-				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.initialDate}/>
+				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.initialDate} currentDate={this.state.date} />
+				{(() => {if(this.state.showHiRes){
+					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
+				} else {
+					return <ImageBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes}>{this.state.data.reactElement}</ImageBox>
+				}})()}
 			</div>
 		);
 	},
@@ -82,13 +87,19 @@ var APP = React.createClass({
 		var _self = this;
 		this.props.apod.get(undefined, function(d){
 			var curDate = new Date(d.date);
-			_self.setState({date: curDate, initialDate: curDate});
+			_self.setState({date: curDate, initialDate: curDate, cutoffDate: curDate});
+			_self.props.apod.setCutoff(_self.state.cutoffDate);
 			_self.updateData(d);
 		});
 	},
 	loadEntry(_date) {
-		this.props.apod.get(_date, this.updateData);
-		this.setState({date: new Date(_date)});
+		var _self = this;
+		this.props.apod.get(_date, function(d){
+			_self.setState({date: new Date(_date)});
+			_self.updateData(d);
+		}, function(d){
+			// requested date was past the cutoff
+		});
 	},
 	updateData(_data){
 		this.setState({data: _data});
@@ -96,6 +107,9 @@ var APP = React.createClass({
 		this.props.apod.preload(this.state.date.prevDate());
 	},
 	onIMGLoad(){
+	},
+	toggleHiRes(){
+		this.setState({showHiRes: !this.state.showHiRes});
 	}
 });
 

@@ -12,10 +12,11 @@ var FilmStrip = React.createClass({
 		background: "#101418",
 		borderTop: "1px solid #202428",
 		whiteSpace: "nowrap",
-		fontSize: 0
+		fontSize: 0,
+		overflow: "hidden"
 	},
 	handleWheel(e){
-		var scrollAmount = -e.deltaX;
+		var scrollAmount = e.deltaX;
 		this.setState({scrollPos: Math.min(this.state.scrollPos + scrollAmount, 0)});
 	},
 	getInitialState() {
@@ -35,27 +36,13 @@ var FilmStrip = React.createClass({
 			dateArr.push(dateMarker.toJSON().substring(0, 10));
 		}
 
-		/*
-		var dateArr = [];
-		var dateMarker = new Date(this.props.initialDate);
-		var scrollDate = new Date(this.state.scrollPos * 1440000 + this.state.initialTime);
-		scrollDate.setHours(12);
-		scrollDate.setMinutes(0);
-		scrollDate.setSeconds(0);
-		scrollDate.setMilliseconds(0);
-		for(var i = -10; i < 10; i++){
-			dateMarker.setTime(scrollDate.getTime() + (i * 86400000));
-			dateArr.push({index: i, dateString: dateMarker.toJSON().substring(0, 10)});
-		}
-		*/
-
 		var self = this;
 
 		return (
 			<div id="filmstrip" onWheel={this.handleWheel} style={this.style}>
 				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
-						return <Thumbnail key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} />
+						return <Thumbnail isSelected={dateString == self.props.currentDate.toJSON().substring(0, 10) ? true : undefined} key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} />
 					})}
 				</div>
 			</div>

@@ -37,6 +37,8 @@ var APOD = function(){
 	var _KEY = "mwTWt97WoV91jHjbgdnjNbYSx9WtAZ91ZBfGUkIl";
 	var _URL = "https://api.nasa.gov/planetary/apod?hd=true&api_key=" + _KEY;
 
+	var cutoffDate = new Date(); // don't try API calls past this date
+
 	// map of cached data pulled from the API
 	var dataCache = new Map();
 
@@ -48,6 +50,12 @@ var APOD = function(){
 	@param {function} [onFail] - Callback for failure
 	*/
 	this.get = function(date, onSuccess = function(d){}, onFail = function(d){}){
+		// Don't do requests past the cutoff date
+		if(date && date.getTime() > cutoffDate.getTime()){
+			onFail("Requested date was past the cutoff.");
+			return -1;
+		}
+
 		// first check to see if we have an entry for this in "data"
 
 		// key date string for looking up date
@@ -66,6 +74,14 @@ var APOD = function(){
 			}});
 		}
 	};
+
+	/*
+	Set the cutoff date for the API. Requests for data past this date will be ignored.
+	@param {Date} _date - The new cutoff date to set.
+	*/
+	this.setCutoff = function(_date){
+		cutoffDate = _date;
+	}
 
 	/*
 	Execute the onSuccess callback from APOD.get().

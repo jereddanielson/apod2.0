@@ -2,10 +2,13 @@ import React from "react"
 
 var Image = React.createClass({
 	style: {
-		boxShadow: "0 0 100px #404448"
+		boxShadow: "0 0 100px #404448",
+		cursor: "zoom-in"
 	},
 	imgstyle: {
-		display: "block"
+		display: "block",
+		maxWidth: "100vw",
+		maxHeight: "calc(100vh - 60px)"
 	},
 	getInitialState() {
 		return {loaded: false};
@@ -22,7 +25,7 @@ var Image = React.createClass({
 		return (
 			<div className="image" style={this.style}>
 				{(() => {if(this.state.loaded){
-					return <img style={this.imgstyle} src={this.props.imgsrc} />
+					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={this.props.imgsrc} />
 				} else {
 					return <div style={{color: "white"}}>Loading...</div>
 				}})()}
