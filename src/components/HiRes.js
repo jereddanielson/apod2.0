@@ -5,7 +5,7 @@ var HiRes = React.createClass({
 		width: "100%",
 		height: "100%",
 		position: "absolute",
-		backgroundColor: "rgba(0, 0, 0, .75)",
+		backgroundColor: "rgba(0, 0, 0, .9)",
 		cursor: "zoom-out"
 	},
 	imgStyle: {

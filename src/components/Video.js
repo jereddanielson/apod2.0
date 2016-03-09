@@ -1,11 +1,13 @@
 import React from "react"
 
 var Video = React.createClass({
+	iframeStyle: {
+		width: "960px",
+		height: "540px"
+	},
 	render() {
 		return (
-			<div>
-				<a href={this.props.vidsrc}>Video Link</a>
-			</div>
+			<iframe style={this.iframeStyle} src={this.props.vidsrc} frameBorder={0} allowFullScreen />
 		);
 	}
 });

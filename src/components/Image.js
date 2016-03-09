@@ -19,7 +19,9 @@ var Image = React.createClass({
 		imgElement.src = this.props.imgsrc;
 	},
 	handleLoaded() {
-		this.setState({loaded: true});
+		if(this.isMounted()){
+			this.setState({loaded: true});
+		}
 	},
 	render() {
 		return (

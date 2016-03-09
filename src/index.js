@@ -88,23 +88,33 @@ var APP = React.createClass({
 		this.props.apod.get(undefined, function(d){
 			var curDate = new Date(d.date);
 			_self.setState({date: curDate, initialDate: curDate, cutoffDate: curDate});
-			_self.props.apod.setCutoff(_self.state.cutoffDate);
 			_self.updateData(d);
 		});
 	},
 	loadEntry(_date) {
-		var _self = this;
-		this.props.apod.get(_date, function(d){
+		// make sure new entry to load isn't past the cutoff date
+		if(_date.getTime() < this.state.cutoffDate.getTime()){
+			var _self = this;
 			_self.setState({date: new Date(_date)});
-			_self.updateData(d);
-		}, function(d){
-			// requested date was past the cutoff
-		});
+			this.props.apod.get(_date, function(d){
+				_self.updateData(d);
+			}, function(d){
+				// failed
+			});
+		}
 	},
 	updateData(_data){
-		this.setState({data: _data});
-		this.props.apod.preload(this.state.date.nextDate());
-		this.props.apod.preload(this.state.date.prevDate());
+		// update app data with what came back from APOD module
+		// only update if the new data agreees with the currently selected date
+		if(this.state.date.toJSON().substring(0, 10) === _data.date){
+			this.setState({data: _data});
+			// preload, but not past the cutoff date
+			var tomorrow = this.state.date.nextDate();
+			if(tomorrow.getTime() < this.state.cutoffDate.getTime()){
+				this.props.apod.preload(this.state.date.nextDate());
+			}
+			this.props.apod.preload(this.state.date.prevDate());
+		}
 	},
 	onIMGLoad(){
 	},

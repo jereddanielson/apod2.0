@@ -18,7 +18,9 @@ var Thumbnail = React.createClass({
 		position: "absolute",
 		width: "100%",
 		height: "100%",
-		backgroundColor: "rgba(255, 0, 0, .5)"
+		boxShadow: "inset 0 0 10px rgba(255, 255, 255, 1)",
+		boxSizing: "border-box",
+		border: "2px solid #EDF3FF"
 	},
 	handleClick(){
 		this.props.loadEntry(new Date(this.props.dateString));
