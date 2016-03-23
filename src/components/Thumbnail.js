@@ -1,5 +1,7 @@
 import React from 'react';
 
+var Moment = require("moment");
+
 var Thumbnail = React.createClass({
 	divStyle: {
 		width: "60px", 
@@ -23,7 +25,7 @@ var Thumbnail = React.createClass({
 		border: "2px solid #EDF3FF"
 	},
 	handleClick(){
-		this.props.loadEntry(new Date(this.props.dateString));
+		this.props.loadEntry(Moment(this.props.dateString));
 	},
 	shouldComponentUpdate(nextProps, nextState) {
 		return nextProps.isSelected !== this.props.isSelected;

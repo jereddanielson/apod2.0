@@ -20,6 +20,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
+var Moment = require("moment");
+
 import APOD from "./modules/APOD"
 
 import Menu from "./components/Menu"
@@ -28,17 +30,6 @@ import ImageBox from "./components/ImageBox"
 import FilmStrip from "./components/FilmStrip"
 import HiRes from "./components/HiRes"
 
-Date.prototype.nextDate = function(){
-	var nextDate = new Date(this);
-	nextDate.setDate(nextDate.getDate() + 1);
-	return nextDate;
-}
-Date.prototype.prevDate = function(){
-	var prevDate = new Date(this);
-	prevDate.setDate(prevDate.getDate() - 1);
-	return prevDate;
-}
-
 var APP = React.createClass({
 	style: {
 		width: "100vw",
@@ -46,7 +37,7 @@ var APP = React.createClass({
 		background: "#000408"
 	},
 	getInitialState() {
-		return {date: new Date(), initialDate: new Date(), cutoffDate: new Date(), data: {}, showHiRes: false};
+		return {date: Moment(), initialDate: Moment(), cutoffDate: Moment(), data: {}, showHiRes: false};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -54,11 +45,11 @@ var APP = React.createClass({
 			switch(e.keyCode){
 				case 37: // left
 					// load previous date
-					this.loadEntry(this.state.date.prevDate());
+					this.loadEntry(Moment(this.state.date).subtract(1, "days"));
 					break;
 				case 39: // right
 					// load next date
-					this.loadEntry(this.state.date.nextDate());
+					this.loadEntry(Moment(this.state.date).add(1, "days"));
 					break;
 			}
 		}
@@ -86,34 +77,35 @@ var APP = React.createClass({
 	loadInitialImage(){
 		var _self = this;
 		this.props.apod.get(undefined, function(d){
-			var curDate = new Date(d.date);
+			var curDate = Moment(d.date);
 			_self.setState({date: curDate, initialDate: curDate, cutoffDate: curDate});
-			_self.updateData(d);
+			_self.updateData(d, curDate);
 		});
 	},
 	loadEntry(_date) {
 		// make sure new entry to load isn't past the cutoff date
-		if(_date.getTime() < this.state.cutoffDate.getTime()){
+		if(_date.isSameOrBefore(this.state.cutoffDate)){
 			var _self = this;
-			_self.setState({date: new Date(_date)});
-			this.props.apod.get(_date, function(d){
-				_self.updateData(d);
+			// get rid of current data???
+			_self.setState({date: Moment(_date), data: {}});
+			_self.props.apod.get(_date, function(d){
+				_self.updateData(d, _date);
 			}, function(d){
 				// failed
 			});
 		}
 	},
-	updateData(_data){
+	updateData(_data, _date){
 		// update app data with what came back from APOD module
 		// only update if the new data agreees with the currently selected date
-		if(this.state.date.toJSON().substring(0, 10) === _data.date){
+		if(_date.toJSON().substring(0, 10) === _data.date){
 			this.setState({data: _data});
 			// preload, but not past the cutoff date
-			var tomorrow = this.state.date.nextDate();
-			if(tomorrow.getTime() < this.state.cutoffDate.getTime()){
-				this.props.apod.preload(this.state.date.nextDate());
+			var tomorrow = Moment(_date).add(1, "days");
+			if(tomorrow.isSameOrBefore(this.state.cutoffDate)){
+				this.props.apod.preload(tomorrow);
 			}
-			this.props.apod.preload(this.state.date.prevDate());
+			this.props.apod.preload(Moment(_date).subtract(1, "days"));
 		}
 	},
 	onIMGLoad(){

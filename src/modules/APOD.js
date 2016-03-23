@@ -30,6 +30,9 @@
 */
 
 import React from "react"
+
+var Moment = require("moment");
+
 import Image from "../Components/Image"
 import Video from "../Components/Video"
 
