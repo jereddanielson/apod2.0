@@ -1,6 +1,8 @@
 import React from "react"
 import ReactDOM from "react-dom"
 
+var Moment = require("moment");
+
 import Thumbnail from "./Thumbnail"
 
 var FilmStrip = React.createClass({
@@ -28,11 +30,10 @@ var FilmStrip = React.createClass({
 	},
 	render() {
 		var dateArr = [];
-		var dateMarker = new Date(this.props.initialDate);
 		var dayFromScroll = Math.ceil(this.state.scrollPos / 60);
-		dateMarker.setDate(dateMarker.getDate() + dayFromScroll - this.state.range);
+		var dateMarker = Moment(this.props.initialDate).subtract(-dayFromScroll + this.state.range, "days");
 		for(var i = 0; i < this.state.range; i++){
-			dateMarker.setDate(dateMarker.getDate() + 1);
+			dateMarker.add(1, "days");
 			dateArr.push(dateMarker.toJSON().substring(0, 10));
 		}
 
