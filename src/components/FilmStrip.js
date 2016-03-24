@@ -11,11 +11,12 @@ var FilmStrip = React.createClass({
 		width: "100vw",
 		height: "60px",
 		bottom: 0,
-		background: "#101418",
-		borderTop: "1px solid #202428",
+		background: "rgba(8, 12, 16, 1)",
+		borderTop: "1px solid #444",
 		whiteSpace: "nowrap",
 		fontSize: 0,
-		overflow: "hidden"
+		overflow: "hidden",
+		zIndex: 30
 	},
 	handleWheel(e){
 		var scrollAmount = e.deltaX;

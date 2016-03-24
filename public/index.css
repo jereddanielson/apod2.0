@@ -3,3 +3,70 @@
 	box-sizing: border-box;
 	border: 2px solid rgba(237, 243, 255, .5);
 }
+
+#sidebar {
+	background: rgba(0, 0, 0, .8);
+	border: 1px solid #444;
+	border-radius: 4px;
+	max-width: 120px;
+	max-height: 16px;
+	transition: .3s;
+}
+
+#sidebar:hover {
+	max-width: 500px;
+	max-height: 1000px;
+}
+
+#sidebar h2, #sidebar p {
+	opacity: 0;
+	transition: .3s ease-in-out;
+}
+
+#sidebar:hover h2, #sidebar:hover p {
+	opacity: 1;
+}
+
+#sidebar.direction-left .dateHeader-enter {
+	opacity: 0;
+	transform: translateX(100%);
+}
+
+#sidebar.direction-left .dateHeader-enter.dateHeader-enter-active {
+	opacity: 1;
+	transition: opacity .2s ease-in-out, transform .2s ease-out;
+	transform: translateX(0%);
+}
+
+#sidebar.direction-left .dateHeader-leave {
+	opacity: 1;
+	transform: translateX(0%);
+}
+
+#sidebar.direction-left .dateHeader-leave.dateHeader-leave-active {
+	opacity: 0;
+	transition: opacity .2s ease-in-out, transform .2s ease-out;
+	transform: translateX(-100%);
+}
+
+#sidebar.direction-right .dateHeader-enter {
+	opacity: 0;
+	transform: translateX(-100%);
+}
+
+#sidebar.direction-right .dateHeader-enter.dateHeader-enter-active {
+	opacity: 1;
+	transition: opacity .2s ease-in-out, transform .2s ease-out;
+	transform: translateX(0%);
+}
+
+#sidebar.direction-right .dateHeader-leave {
+	opacity: 1;
+	transform: translateX(0%);
+}
+
+#sidebar.direction-right .dateHeader-leave.dateHeader-leave-active {
+	opacity: 0;
+	transition: opacity .2s ease-in-out, transform .2s ease-out;
+	transform: translateX(100%);
+}

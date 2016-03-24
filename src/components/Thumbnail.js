@@ -14,7 +14,9 @@ var Thumbnail = React.createClass({
 		left: "30px", 
 		transform: "translate(-50%, -50%)", 
 		display: "block", 
-		position: "absolute"
+		position: "absolute",
+		WebkitUserSelect: "none",
+		userSelect: "none"
 	},
 	overlayStyle: {
 		position: "absolute",

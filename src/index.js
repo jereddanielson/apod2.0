@@ -65,7 +65,7 @@ var APP = React.createClass({
 		return (
 			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
-				<SideBar data={this.state.data} />
+				<SideBar date={this.state.date} data={this.state.data} />
 				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.initialDate} currentDate={this.state.date} />
 				{(() => {if(this.state.showHiRes){
 					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
