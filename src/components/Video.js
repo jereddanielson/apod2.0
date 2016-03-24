@@ -3,7 +3,9 @@ import React from "react"
 var Video = React.createClass({
 	iframeStyle: {
 		width: "960px",
-		height: "540px"
+		height: "540px",
+		position: "absolute",
+		transform: "translate(-50%, -50%)"
 	},
 	render() {
 		return (

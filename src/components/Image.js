@@ -3,7 +3,9 @@ import React from "react"
 var Image = React.createClass({
 	style: {
 		boxShadow: "0 0 100px #404448",
-		cursor: "zoom-in"
+		cursor: "zoom-in",
+		position: "absolute",
+		transform: "translate(-50%, -50%)"
 	},
 	imgstyle: {
 		display: "block",
@@ -11,14 +13,17 @@ var Image = React.createClass({
 		maxHeight: "calc(100vh - 60px)"
 	},
 	getInitialState() {
+		// start unloaded
 		return {loaded: false};
 	},
 	componentDidMount() {
+		// when mounted, create and load image
 		var imgElement = document.createElement("img");
 		imgElement.onload = this.handleLoaded;
 		imgElement.src = this.props.imgsrc;
 	},
 	handleLoaded() {
+		// once image successfully loads, switch loaded flag
 		if(this.isMounted()){
 			this.setState({loaded: true});
 		}

@@ -54,22 +54,25 @@ var APP = React.createClass({
 			}
 		}
 	},
-	componentWillMount() {
-		document.addEventListener("keydown", this.handleKeyDown);
-	},
 	componentDidMount() {
+		document.addEventListener("keydown", this.handleKeyDown);
 		this.loadInitialImage();
+	},
+	componentWillUnmount() {
+		document.removeEventListener("keydown", this.handleKeyDown);
 	},
 	render() {
 		return (
 			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
-				<SideBar />
+				<SideBar data={this.state.data} />
 				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.initialDate} currentDate={this.state.date} />
 				{(() => {if(this.state.showHiRes){
 					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
 				} else {
-					return <ImageBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes}>{this.state.data.reactElement}</ImageBox>
+					return <ImageBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes}>
+						{this.state.data.reactElement}
+					</ImageBox>
 				}})()}
 			</div>
 		);

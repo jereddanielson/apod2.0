@@ -33,6 +33,8 @@ import React from "react"
 
 var Moment = require("moment");
 
+import $ from "jquery"
+
 import Image from "../Components/Image"
 import Video from "../Components/Video"
 

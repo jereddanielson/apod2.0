@@ -25,12 +25,21 @@ var FilmStrip = React.createClass({
 		return {scrollPos: 0, range: 1};
 	},
 	componentDidMount() {
+		this.updateRange();
+		window.addEventListener("resize", this.updateRange);
+	},
+	componentWillUnmount(){
+		window.removeEventListener("resize", this.updateRange);
+	},
+	updateRange(){
+		// the "range" (number of visible thumbnails) is based on window width
 		var thisWidth = ReactDOM.findDOMNode(this).clientWidth;
-		this.setState({range: Math.ceil(thisWidth / 60 + 1), width: thisWidth})
+		this.setState({range: Math.ceil(thisWidth / 60 + 1)});
 	},
 	render() {
-		var dateArr = [];
-		var dayFromScroll = Math.ceil(this.state.scrollPos / 60);
+		var dateArr = []; // all the dates to show (date strings)
+		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
+		// beginning of filmstrip date range is based on scroll position and range of days to show
 		var dateMarker = Moment(this.props.initialDate).subtract(-dayFromScroll + this.state.range, "days");
 		for(var i = 0; i < this.state.range; i++){
 			dateMarker.add(1, "days");

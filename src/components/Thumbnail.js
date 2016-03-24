@@ -19,15 +19,19 @@ var Thumbnail = React.createClass({
 	overlayStyle: {
 		position: "absolute",
 		width: "100%",
-		height: "100%",
+		height: "100%"
+	},
+	activeStyle: {
 		boxShadow: "inset 0 0 10px rgba(255, 255, 255, 1)",
 		boxSizing: "border-box",
 		border: "2px solid #EDF3FF"
 	},
 	handleClick(){
+		// when clicked, load the appropriate date way back in index.js
 		this.props.loadEntry(Moment(this.props.dateString));
 	},
 	shouldComponentUpdate(nextProps, nextState) {
+		// only update if props differ, which should only happen if it gains/loses isSelected status
 		return nextProps.isSelected !== this.props.isSelected;
 	},
 	render() {
@@ -35,7 +39,9 @@ var Thumbnail = React.createClass({
 			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
 				<img style={this.imgStyle} onDragStart={function(e){e.preventDefault();}} src={"http://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg"} />
 				{(() => {if(this.props.isSelected){
-					return <div style={this.overlayStyle} className="thumbnail-overlay"></div>
+					return <div style={Object.assign({}, this.overlayStyle, this.activeStyle)} className="thumbnail-overlay"></div>
+				} else {
+					return <div style={this.overlayStyle} className="thumbnail-overlay"></div>	
 				}})()}
 			</div>
 		);
