@@ -2,8 +2,7 @@ import React from "react"
 
 var ContentBox = React.createClass({
 	style: {
-		margin: "0 auto",
-		right: "20px",
+		right: "50%",
 		top: "calc(50% - 30px)",
 		transform: "translate(-50%, -50%) scale(1)",
 		background: "rgba(255, 100, 100, .1)",

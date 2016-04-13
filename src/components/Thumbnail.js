@@ -36,7 +36,9 @@ var Thumbnail = React.createClass({
 	},
 	handleClick(){
 		// when clicked, load the appropriate date way back in index.js
-		this.props.loadEntry(Moment(this.props.dateString));
+		if(!this.props.isDragging){
+			this.props.loadEntry(Moment(this.props.dateString));
+		}
 	},
 	shouldComponentUpdate(nextProps, nextState) {
 		// only update if props differ, which should only happen if it gains/loses isSelected status

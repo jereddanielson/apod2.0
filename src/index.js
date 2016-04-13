@@ -26,19 +26,20 @@ import APOD from "./modules/APOD"
 
 import Menu from "./components/Menu"
 import SideBar from "./components/SideBar"
-import ImageBox from "./components/ImageBox"
+import ContentBox from "./components/ContentBox"
 import FilmStrip from "./components/FilmStrip"
 import HiRes from "./components/HiRes"
 
 var APP = React.createClass({
 	style: {
+		position: "absolute",
 		width: "100vw",
 		height: "100vh",
 		background: "#000408",
 		overflow: "hidden"
 	},
 	getInitialState() {
-		return {date: Moment(), data: {}, showHiRes: false};
+		return {date: Moment(), data: {}, showHiRes: false, initialImageLoaded: false};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -65,22 +66,28 @@ var APP = React.createClass({
 			_self.fetchFromAPOD(theMoment);
 		}
 		this.loadInitialImage();
+		window.addEventListener("resize", this.handleResize);
+		this.handleResize();
 	},
 	componentWillUnmount() {
 		document.removeEventListener("keydown", this.handleKeyDown);
+		window.removeEventListener("resize", this.handleResize);
+	},
+	handleResize() {
+		this.setState({clientWidth: ReactDOM.findDOMNode(this).clientWidth});
 	},
 	render() {
 		return (
-			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} style={this.style}>
+			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} onScroll={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
 				<SideBar data={this.state.data} />
-				<FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} />
+				{this.state.initialImageLoaded ? <FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} /> : ""}
 				{(() => {if(this.state.showHiRes){
 					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
 				} else {
-					return <ImageBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes}>
+					return <ContentBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes} >
 						{this.state.data.reactElement}
-					</ImageBox>
+					</ContentBox>
 				}})()}
 			</div>
 		);
@@ -92,7 +99,7 @@ var APP = React.createClass({
 			// seems to be a valid date in the URL hash
 			this.props.apod.get(dateToLoad, function(d){
 				var curDate = Moment(d.date);
-				_self.setState({date: curDate});
+				_self.setState({date: curDate, initialImageLoaded: true});
 				_self.updateData(d, curDate);
 			});
 		} else {
@@ -100,7 +107,7 @@ var APP = React.createClass({
 			location.hash = "";
 			this.props.apod.get(undefined, function(d){
 				var curDate = Moment(d.date);
-				_self.setState({date: curDate});
+				_self.setState({date: curDate, initialImageLoaded: true});
 				_self.updateData(d, curDate);
 			});
 		}

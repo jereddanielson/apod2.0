@@ -1,5 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
+import TweenLite from "gsap"
 
 var Moment = require("moment");
 
@@ -14,7 +15,8 @@ var FilmStrip = React.createClass({
 		background: "#101418",
 		borderTop: "1px solid #202428",
 		whiteSpace: "nowrap",
-		fontSize: 0
+		fontSize: 0,
+		zIndex: 100
 	},
 	handleWheel(e){
 		var scrollAmount = e.deltaX + e.deltaY;
@@ -51,6 +53,35 @@ var FilmStrip = React.createClass({
 		this.setState({range: Math.ceil(thisWidth / 60 + 1)});
 		this.keepCurrentInView(this.props);
 	},
+	handlePointerStart(e){
+		if(this.inertiaTween){
+			this.inertiaTween.kill();
+		}
+		this.lastVelocity = 0;
+		this.firstClientX = e.clientX;
+		this.lastClientX = e.clientX;
+		this.isPointerDown = true;
+	},
+	handlePointerMove(e){
+		if(this.isPointerDown){
+			var isNowDragging = this.state.isDragging;
+			if(!this.state.isDragging && Math.abs(this.firstClientX - e.clientX) > 10){
+				isNowDragging = true;
+			}
+			this.lastVelocity = this.lastClientX - e.clientX;
+			this.setState({scrollPos: Math.min(0, this.state.scrollPos + this.lastVelocity), isDragging: isNowDragging});
+			this.lastClientX = e.clientX;
+		}
+	},
+	handlePointerUp(e){
+		this.isPointerDown = false;
+		var self = this;
+		if(this.state.isDragging){
+			this.inertiaTween = TweenLite.to(this, 1, {lastVelocity: 0, onUpdate: function(){
+				self.setState({scrollPos: Math.min(0, self.state.scrollPos + self.lastVelocity), isDragging: false});
+			}});
+		}
+	},
 	render() {
 		//console.log(Date.now());
 		var dateArr = []; // all the dates to show (date strings)
@@ -74,10 +105,10 @@ var FilmStrip = React.createClass({
 		var self = this;
 
 		return (
-			<div id="filmstrip" onWheel={this.handleWheel} style={this.style}>
+			<div id="filmstrip" onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handlePointerStart} onTouchMove={this.handlePointerMove} onTouchEnd={this.handlePointerUp} onTouchCancel={this.handlePointerUp} style={this.style}>
 				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
-						return <Thumbnail isSelected={dateString == self.props.currentDate.toJSON().substring(0, 10) ? true : undefined} key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} />
+						return <Thumbnail isSelected={dateString == self.props.currentDate.toJSON().substring(0, 10) ? true : undefined} key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />
 					})}
 				</div>
 			</div>

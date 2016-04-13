@@ -14,3 +14,8 @@
 	opacity: 1;
 	transform: translate(-50%, 0px);
 }
+
+img, .thumbnail {
+	-webkit-user-select: none;
+	user-select: none;
+}

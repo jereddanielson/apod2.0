@@ -12,6 +12,11 @@ var Image = React.createClass({
 		maxWidth: "100vw",
 		maxHeight: "calc(100vh - 60px)"
 	},
+	loadingStyle: {
+		display: "block",
+		color: "white",
+		transform: "translate(-50%, -50%)"
+	},
 	getInitialState() {
 		// start unloaded
 		return {loaded: false};
@@ -34,7 +39,7 @@ var Image = React.createClass({
 				{(() => {if(this.state.loaded){
 					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={this.props.imgsrc} />
 				} else {
-					return <div style={{color: "white"}}>Loading...</div>
+					return "";
 				}})()}
 			</div>
 		);
