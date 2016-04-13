@@ -37,7 +37,7 @@ var APP = React.createClass({
 		background: "#000408"
 	},
 	getInitialState() {
-		return {date: Moment(), initialDate: Moment(), cutoffDate: Moment(), data: {}, showHiRes: false};
+		return {date: Moment(), data: {}, showHiRes: false};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -56,6 +56,13 @@ var APP = React.createClass({
 	},
 	componentDidMount() {
 		document.addEventListener("keydown", this.handleKeyDown);
+		var _self = this;
+		window.onpopstate = function(e){
+			var theHash = location.hash.replace("#", ""); // theHash might be empty
+			var theMoment = Moment(theHash);
+			theMoment = theMoment.isValid() ? theMoment : Moment(); // Moment must be valid
+			_self.fetchFromAPOD(theMoment);
+		}
 		this.loadInitialImage();
 	},
 	componentWillUnmount() {
@@ -66,7 +73,7 @@ var APP = React.createClass({
 			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
 				<SideBar data={this.state.data} />
-				<FilmStrip loadEntry={this.loadEntry} initialDate={this.state.initialDate} currentDate={this.state.date} />
+				<FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} />
 				{(() => {if(this.state.showHiRes){
 					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
 				} else {
@@ -79,15 +86,30 @@ var APP = React.createClass({
 	},
 	loadInitialImage(){
 		var _self = this;
-		this.props.apod.get(undefined, function(d){
-			var curDate = Moment(d.date);
-			_self.setState({date: curDate, initialDate: curDate, cutoffDate: curDate});
-			_self.updateData(d, curDate);
-		});
+		var dateToLoad = Moment(location.hash.substring(1, 11));
+		if(dateToLoad.isValid()){
+			// seems to be a valid date in the URL hash
+			this.props.apod.get(dateToLoad, function(d){
+				var curDate = Moment(d.date);
+				_self.setState({date: curDate});
+				_self.updateData(d, curDate);
+			});
+		} else {
+			// no valid URL hash for the date
+			location.hash = "";
+			this.props.apod.get(undefined, function(d){
+				var curDate = Moment(d.date);
+				_self.setState({date: curDate});
+				_self.updateData(d, curDate);
+			});
+		}
 	},
 	loadEntry(_date) {
+		location.hash = _date.toJSON().substring(0, 10);
+	},
+	fetchFromAPOD(_date){
 		// make sure new entry to load isn't past the cutoff date
-		if(_date.isSameOrBefore(this.state.cutoffDate)){
+		if(_date.isSameOrBefore(Moment()) && !_date.isSame(this.state.date)){
 			var _self = this;
 			// get rid of current data???
 			_self.setState({date: Moment(_date), data: {}});
@@ -105,7 +127,7 @@ var APP = React.createClass({
 			this.setState({data: _data});
 			// preload, but not past the cutoff date
 			var tomorrow = Moment(_date).add(1, "days");
-			if(tomorrow.isSameOrBefore(this.state.cutoffDate)){
+			if(tomorrow.isSameOrBefore(Moment())){
 				this.props.apod.preload(tomorrow);
 			}
 			this.props.apod.preload(Moment(_date).subtract(1, "days"));
