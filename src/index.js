@@ -34,7 +34,8 @@ var APP = React.createClass({
 	style: {
 		width: "100vw",
 		height: "100vh",
-		background: "#000408"
+		background: "#000408",
+		overflow: "hidden"
 	},
 	getInitialState() {
 		return {date: Moment(), data: {}, showHiRes: false};

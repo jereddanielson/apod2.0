@@ -1,5 +1,16 @@
-.thumbnail-overlay:hover {
+.thumbnail:hover .thumbnail-overlay {
 	box-shadow: inset 0 0 10px rgba(255, 255, 255, .5);
 	box-sizing: border-box;
 	border: 2px solid rgba(237, 243, 255, .5);
+}
+
+.date-hover {
+	transition: .15s ease-out;
+	opacity: 0;
+	transform: translate(-50%, 6px);
+}
+
+.thumbnail:hover .date-hover {
+	opacity: 1;
+	transform: translate(-50%, 0px);
 }

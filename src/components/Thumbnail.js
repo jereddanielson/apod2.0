@@ -26,6 +26,14 @@ var Thumbnail = React.createClass({
 		boxSizing: "border-box",
 		border: "2px solid #EDF3FF"
 	},
+	dateHoverStyle: {
+		position: "absolute",
+		left: "50%",
+		top: "-20px",
+		color: "#aaa",
+		fontSize: "12px",
+		fontFamily: "Open Sans, sans-serif"
+	},
 	handleClick(){
 		// when clicked, load the appropriate date way back in index.js
 		this.props.loadEntry(Moment(this.props.dateString));
@@ -43,6 +51,7 @@ var Thumbnail = React.createClass({
 				} else {
 					return <div style={this.overlayStyle} className="thumbnail-overlay"></div>	
 				}})()}
+				<div className="date-hover" style={this.dateHoverStyle}>{this.props.dateString}</div>
 			</div>
 		);
 	}

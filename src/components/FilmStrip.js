@@ -14,8 +14,7 @@ var FilmStrip = React.createClass({
 		background: "#101418",
 		borderTop: "1px solid #202428",
 		whiteSpace: "nowrap",
-		fontSize: 0,
-		overflow: "hidden"
+		fontSize: 0
 	},
 	handleWheel(e){
 		var scrollAmount = e.deltaX + e.deltaY;
@@ -32,21 +31,25 @@ var FilmStrip = React.createClass({
 		window.removeEventListener("resize", this.updateRange);
 	},
 	componentWillReceiveProps(nextProps){
+		this.keepCurrentInView(nextProps);
+	},
+	keepCurrentInView(props){
 		// check that new date is inside visible range
 		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
-		if(dayFromScroll - 1 < nextProps.currentDate.diff(Moment(), "days")){
+		if(dayFromScroll - 1 < props.currentDate.diff(Moment(), "days")){
 			// outside right bounds
-			this.setState({scrollPos: Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - nextProps.currentDate.diff(Moment(), "days")) * 60});
+			this.setState({scrollPos: Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - props.currentDate.diff(Moment(), "days")) * 60});
 		}
-		if(dayFromScroll - this.state.range + 2 > nextProps.currentDate.diff(Moment(), "days")){
+		if(dayFromScroll - this.state.range + 2 > props.currentDate.diff(Moment(), "days")){
 			// outside left bounds
-			this.setState({scrollPos: Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - nextProps.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth / 60)});
+			this.setState({scrollPos: Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth % 60)});
 		}
 	},
 	updateRange(){
 		// the "range" (number of visible thumbnails) is based on window width
 		var thisWidth = ReactDOM.findDOMNode(this).clientWidth;
 		this.setState({range: Math.ceil(thisWidth / 60 + 1)});
+		this.keepCurrentInView(this.props);
 	},
 	render() {
 		//console.log(Date.now());
