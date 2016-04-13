@@ -4,7 +4,7 @@ var ImageBox = React.createClass({
 	style: {
 		margin: "0 auto",
 		left: "50%",
-		top: "calc(50% - 30px)",
+		top: "calc(50% - 60px)",
 		transform: "translate(-50%, -50%)",
 		background: "rgba(255, 100, 100, .1)",
 		position: "absolute"

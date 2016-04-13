@@ -10,7 +10,7 @@ var Image = React.createClass({
 	imgstyle: {
 		display: "block",
 		maxWidth: "100vw",
-		maxHeight: "calc(100vh - 60px)"
+		maxHeight: "calc(100vh - 120px)"
 	},
 	getInitialState() {
 		// start unloaded
