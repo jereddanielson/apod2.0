@@ -32,7 +32,16 @@ var FilmStrip = React.createClass({
 		window.removeEventListener("resize", this.updateRange);
 	},
 	componentWillReceiveProps(nextProps){
-		//console.log(nextProps);
+		// check that new date is inside visible range
+		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
+		if(dayFromScroll - 1 < nextProps.currentDate.diff(Moment(), "days")){
+			// outside right bounds
+			this.setState({scrollPos: Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - nextProps.currentDate.diff(Moment(), "days")) * 60});
+		}
+		if(dayFromScroll - this.state.range + 2 > nextProps.currentDate.diff(Moment(), "days")){
+			// outside left bounds
+			this.setState({scrollPos: Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - nextProps.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth / 60)});
+		}
 	},
 	updateRange(){
 		// the "range" (number of visible thumbnails) is based on window width
@@ -45,6 +54,15 @@ var FilmStrip = React.createClass({
 		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
 		// beginning of filmstrip date range is based on scroll position and range of days to show
 		var dateMarker = Moment().subtract(-dayFromScroll + this.state.range, "days");
+
+		// //console.log(dayFromScroll, dateMarker, this.state.scrollPos, this.props.currentDate.diff(Moment(), "days"), this.state.range);
+		// if(dayFromScroll - 1 < this.props.currentDate.diff(Moment(), "days")){
+		// 	console.log("outside right bounds by " + Math.abs(dayFromScroll - 1 - this.props.currentDate.diff(Moment(), "days")));
+		// }
+		// if(dayFromScroll - this.state.range + 2 > this.props.currentDate.diff(Moment(), "days")){
+		// 	console.log("outside left bounds by " + (dayFromScroll - this.state.range + 2 - this.props.currentDate.diff(Moment(), "days")));
+		// }
+
 		for(var i = 0; i < this.state.range; i++){
 			dateMarker.add(1, "days");
 			dateArr.push(dateMarker.toJSON().substring(0, 10));

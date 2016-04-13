@@ -124,6 +124,8 @@ var APP = React.createClass({
 		// update app data with what came back from APOD module
 		// only update if the new data agreees with the currently selected date
 		if(_date.toJSON().substring(0, 10) === _data.date){
+			// update title???
+			document.title = "APOD 2.0 - " + _data.title;
 			this.setState({data: _data});
 			// preload, but not past the cutoff date
 			var tomorrow = Moment(_date).add(1, "days");
