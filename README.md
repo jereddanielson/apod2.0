@@ -27,6 +27,7 @@ Use webpack to package everything. Make sure you're in the apod2.0 folder.
 
 Start an HTTP server of your choice from the public directory.
 > `~ cd public`
+
 > `~ http-server -c-1`
 
 Copyright Jered Danielson, GNU GPL v3.0, 2016
