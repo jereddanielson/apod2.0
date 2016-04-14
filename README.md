@@ -18,6 +18,7 @@ Clone repo.
 
 Enter new directory and install with npm (you may or may not need sudo).
 > `~ cd apod2.0`
+
 > `~ sudo npm install`
 
 ### Build & Run:
