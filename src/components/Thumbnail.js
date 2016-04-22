@@ -49,10 +49,13 @@ var Thumbnail = React.createClass({
 	dateHoverStyle: {
 		position: "absolute",
 		left: "50%",
-		top: "-20px",
+		top: "-18px",
 		color: "#aaa",
+		padding: "2px",
 		fontSize: "12px",
-		fontFamily: "Open Sans, sans-serif"
+		fontFamily: "Open Sans, sans-serif",
+		backgroundColor: "black",
+		pointerEvents: "none"
 	},
 	handleClick(){
 		// when clicked, load the appropriate date way back in index.js

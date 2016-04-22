@@ -19,46 +19,30 @@
 */
 
 import React from "react"
-import DateBox from "./DateBox"
 
-var Moment = require("moment");
-
-var SideBar = React.createClass({
+var DateBox = React.createClass({
 	style: {
-		color: "#eee",
+		display: "block",
 		position: "absolute",
-		width: "100%",
-		left: "0",
-		top: "0"
-	},
-	titleStyle: {
-		fontFamily: "Open Sans, sans-serif",
-		padding: 0,
-		margin: 0,
-		lineHeight: "60px",
-		textAlign: "center",
-		width: "50%",
-		maxWidth: "600px",
-		height: "60px",
-		overflow: "hidden",
-		margin: "0 auto",
-		textOverflow: "ellipsis",
-		whiteSpace: "nowrap"
-	},
-	pStyle: {
-		color: "#aaa",
-		fontFamily: "Roboto Slab, serif",
-		fontWeight: 300
+		left: 0,
+		top: 0,
+		fontFamily: "Open Sans, sans-serif"
 	},
 	render() {
-		var thisMoment = this.props.data.date ? Moment(this.props.data.date) : undefined;
 		return (
-			<div id="sidebar" style={this.style}>
-				<DateBox curDate={thisMoment} />
-				<div style={this.titleStyle}>{this.props.data.title}</div>
+			<div id="datebox" style={this.style} >
+				<div style={{fontSize: "40px", position: "absolute", textAlign: "right", width: "50px"}} >
+					{this.props.curDate ? this.props.curDate.date() : ""}
+				</div>
+				<div style={{position: "absolute", left: "60px", top: "10px", fontSize: "12px"}} >
+					{this.props.curDate ? this.props.curDate.format("MMMM").toString() : ""}
+				</div>
+				<div style={{position: "absolute", left: "60px", top: "30px", fontSize: "12px"}} >
+					{this.props.curDate ? this.props.curDate.year() : ""}
+				</div>
 			</div>
 		);
 	}
 });
 
-module.exports = SideBar;
+module.exports = DateBox;

@@ -1,4 +1,4 @@
-# APOD
+# APOD 2.0
 
 NASA's Astronomy Picture of the Day is a fantastic resource for space enthusiasts. Unfortunately the user interface hasn't been updated in over a decade, and is a pain to use. This project seeks to enhance APOD with a suite of "web 2.0" enabled features to improve its usability.
 

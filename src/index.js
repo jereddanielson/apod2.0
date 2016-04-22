@@ -42,7 +42,7 @@ var APP = React.createClass({
 		overflow: "hidden"
 	},
 	getInitialState() {
-		return {date: Moment(), data: {}, showHiRes: false, initialImageLoaded: false};
+		return {date: {}, data: {}, showHiRes: false, initialImageLoaded: false};
 	},
 	handleKeyDown(e) {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
@@ -123,7 +123,7 @@ var APP = React.createClass({
 		if(_date.isSameOrBefore(Moment()) && !_date.isSame(this.state.date)){
 			var _self = this;
 			// get rid of current data???
-			_self.setState({date: Moment(_date), data: {}});
+			_self.setState({date: Moment(_date)});
 			_self.props.apod.get(_date, function(d){
 				_self.updateData(d, _date);
 			}, function(d){

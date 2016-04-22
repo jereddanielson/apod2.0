@@ -27,7 +27,7 @@
 .date-hover {
 	transition: .15s ease-out;
 	opacity: 0;
-	transform: translate(-50%, 6px);
+	transform: translate(-50%, 4px);
 }
 
 .thumbnail:hover .date-hover {
