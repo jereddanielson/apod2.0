@@ -24,21 +24,23 @@ var DateBox = React.createClass({
 	style: {
 		display: "block",
 		position: "absolute",
-		left: 0,
+		left: "10px",
 		top: 0,
-		fontFamily: "Open Sans, sans-serif"
+		fontFamily: "'Roboto Slab', monospace"
 	},
 	render() {
 		return (
 			<div id="datebox" style={this.style} >
-				<div style={{fontSize: "40px", position: "absolute", textAlign: "right", width: "50px"}} >
+				<div id="datebox-day" className="datebox-component" style={{fontSize: "64px", display: "inline-block", textAlign: "right", padding: "10px", lineHeight: "64px"}} >
 					{this.props.curDate ? this.props.curDate.date() : ""}
 				</div>
-				<div style={{position: "absolute", left: "60px", top: "10px", fontSize: "12px"}} >
-					{this.props.curDate ? this.props.curDate.format("MMMM").toString() : ""}
-				</div>
-				<div style={{position: "absolute", left: "60px", top: "30px", fontSize: "12px"}} >
-					{this.props.curDate ? this.props.curDate.year() : ""}
+				<div style={{display: "inline-block", marginLeft: "5px"}}>
+					<div id="datebox-month" className="datebox-component" style={{fontSize: "18px", padding: "5px"}} >
+						{this.props.curDate ? this.props.curDate.format("MMMM").toString() : ""}
+					</div>
+					<div id="datebox-year" className="datebox-component" style={{fontSize: "18px", padding: "5px", display: "inline-block"}} >
+						{this.props.curDate ? this.props.curDate.year() : ""}
+					</div>
 				</div>
 			</div>
 		);

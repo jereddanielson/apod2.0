@@ -51,11 +51,14 @@ var Thumbnail = React.createClass({
 		left: "50%",
 		top: "-18px",
 		color: "#aaa",
-		padding: "2px",
+		padding: "5px",
+		background: "#101418",
+		border: "1px solid #202428",
 		fontSize: "12px",
 		fontFamily: "Open Sans, sans-serif",
 		backgroundColor: "black",
-		pointerEvents: "none"
+		pointerEvents: "none",
+		zIndex: 50
 	},
 	handleClick(){
 		// when clicked, load the appropriate date way back in index.js

@@ -30,7 +30,7 @@ var Image = React.createClass({
 	imgstyle: {
 		display: "block",
 		maxWidth: "100vw",
-		maxHeight: "calc(100vh - 120px)"
+		maxHeight: "calc(100vh - 160px)"
 	},
 	loadingStyle: {
 		display: "block",

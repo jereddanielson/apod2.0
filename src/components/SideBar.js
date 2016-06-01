@@ -32,18 +32,30 @@ var SideBar = React.createClass({
 		top: "0"
 	},
 	titleStyle: {
-		fontFamily: "Open Sans, sans-serif",
+		fontFamily: "'Roboto Slab', monospace",
+		fontSize: "32px",
 		padding: 0,
 		margin: 0,
-		lineHeight: "60px",
+		lineHeight: "80px",
 		textAlign: "center",
 		width: "50%",
-		maxWidth: "600px",
-		height: "60px",
+		height: "80px",
 		overflow: "hidden",
 		margin: "0 auto",
 		textOverflow: "ellipsis",
 		whiteSpace: "nowrap"
+	},
+	explanationStyle: {
+		fontSize: "16px",
+		letterSpacing: ".02em",
+		background: "#101418",
+		border: "1px solid #202428",
+		padding: "20px",
+		top: "-10px",
+		width: "512px",
+		margin: "0 auto",
+		position: "relative",
+		zIndex: 20
 	},
 	pStyle: {
 		color: "#aaa",
@@ -55,7 +67,8 @@ var SideBar = React.createClass({
 		return (
 			<div id="sidebar" style={this.style}>
 				<DateBox curDate={thisMoment} />
-				<div style={this.titleStyle}>{this.props.data.title}</div>
+				<div id="sidebar-title" style={this.titleStyle}>{this.props.data.title}</div>
+				<div id="sidebar-explanation" style={this.explanationStyle}>{this.props.data.explanation}</div>
 			</div>
 		);
 	}
