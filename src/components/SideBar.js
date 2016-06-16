@@ -47,7 +47,7 @@ var SideBar = React.createClass({
 	},
 	explanationStyle: {
 		fontSize: "16px",
-		letterSpacing: ".02em",
+		letterSpacing: ".05em",
 		background: "#101418",
 		border: "1px solid #202428",
 		padding: "20px",
@@ -63,10 +63,9 @@ var SideBar = React.createClass({
 		fontWeight: 300
 	},
 	render() {
-		var thisMoment = this.props.data.date ? Moment(this.props.data.date) : undefined;
 		return (
 			<div id="sidebar" style={this.style}>
-				<DateBox curDate={thisMoment} />
+				<DateBox curDate={this.props.currentDate} setNewDate={this.props.setNewDate} />
 				<div id="sidebar-title" style={this.titleStyle}>{this.props.data.title}</div>
 				<div id="sidebar-explanation" style={this.explanationStyle}>{this.props.data.explanation}</div>
 			</div>

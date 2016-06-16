@@ -140,4 +140,29 @@ img, .thumbnail {
 	     user-select: none;
 }
 
+.day-picker, .month-picker, .year-picker {
+	position: relative;
+	z-index: 1000;
+}
+
+.day-picker-inner, .month-picker-inner, .year-picker-inner {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	font-size: 2vh;
+	line-height: 2.25vh;
+	background: #202428;
+	color: white;
+	min-width: 100%;
+	text-align: center;
+}
+
+.picker-element:hover {
+	background: blue;
+}
+
+.selected-picker-element {
+	background: lightblue;
+}
+
 /* End document styles */

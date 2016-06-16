@@ -41,6 +41,7 @@ var APP = React.createClass({
 		background: "#000408",
 		overflow: "hidden"
 	},
+	earliestPossibleDate: Moment("1995-09-22"),
 	getInitialState() {
 		return {date: {}, data: {}, showHiRes: false, initialImageLoaded: false};
 	},
@@ -83,8 +84,8 @@ var APP = React.createClass({
 		return (
 			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} onScroll={function(e){e.preventDefault();}} style={this.style}>
 				<Menu />
-				<SideBar data={this.state.data} />
-				{this.state.initialImageLoaded ? <FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} /> : ""}
+				{this.state.initialImageLoaded ? <SideBar data={this.state.data} currentDate={this.state.date} setNewDate={this.loadEntry} /> : undefined}
+				{this.state.initialImageLoaded ? <FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} /> : undefined}
 				{(() => {if(this.state.showHiRes){
 					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
 				} else {
