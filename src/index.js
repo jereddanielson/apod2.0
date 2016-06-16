@@ -32,6 +32,7 @@ import SideBar from "./components/SideBar"
 import ContentBox from "./components/ContentBox"
 import FilmStrip from "./components/FilmStrip"
 import HiRes from "./components/HiRes"
+import ArrowNav from "./components/ArrowNav"
 
 var APP = React.createClass({
 	style: {
@@ -51,14 +52,20 @@ var APP = React.createClass({
 			switch(e.keyCode){
 				case 37: // left
 					// load previous date
-					this.loadEntry(Moment(this.state.date).subtract(1, "days"));
+					this.loadPrevEntry();
 					break;
 				case 39: // right
 					// load next date
-					this.loadEntry(Moment(this.state.date).add(1, "days"));
+					this.loadNextEntry();
 					break;
 			}
 		}
+	},
+	loadNextEntry() {
+		this.loadEntry(Moment(this.state.date).add(1, "days"));
+	},
+	loadPrevEntry() {
+		this.loadEntry(Moment(this.state.date).subtract(1, "days"));
 	},
 	componentDidMount() {
 		document.addEventListener("keydown", this.handleKeyDown);
@@ -93,6 +100,8 @@ var APP = React.createClass({
 						{this.state.data.reactElement}
 					</ContentBox>
 				}})()}
+				{this.state.initialImageLoaded ? <ArrowNav direction="next" setNewDate={this.loadNextEntry} /> : undefined}
+				{this.state.initialImageLoaded ? <ArrowNav direction="prev" setNewDate={this.loadPrevEntry} /> : undefined}
 			</div>
 		);
 	},

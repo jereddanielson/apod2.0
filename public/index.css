@@ -165,4 +165,29 @@ img, .thumbnail {
 	background: lightblue;
 }
 
+.arrow-nav {
+	width: 40px;
+	height: 100px;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	opacity: .5;
+	z-index: 500;
+	transition: all .3s ease-in-out;
+}
+
+.arrow-nav:hover {
+	opacity: 1;
+}
+
+.arrow-nav.prev {
+	left: 0;
+}
+
+.arrow-nav.next {
+	right: 0;
+	transform: scaleX(-1);
+}
+
 /* End document styles */
