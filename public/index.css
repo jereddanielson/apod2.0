@@ -158,11 +158,13 @@ img, .thumbnail {
 }
 
 .picker-element:hover {
-	background: blue;
+	background: #888;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
 }
 
 .selected-picker-element {
-	background: lightblue;
+	background: #555;
 }
 
 .arrow-nav {

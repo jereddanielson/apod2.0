@@ -25,7 +25,7 @@ var Moment = require("moment");
 
 var SideBar = React.createClass({
 	style: {
-		color: "#eee",
+		color: "#ccc",
 		position: "absolute",
 		width: "100%",
 		left: "0",
