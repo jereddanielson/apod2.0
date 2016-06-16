@@ -27,7 +27,7 @@ var HiRes = React.createClass({
 		position: "absolute",
 		backgroundColor: "rgba(0, 0, 0, .9)",
 		cursor: "zoom-out",
-		zIndex: 200
+		zIndex: 2000
 	},
 	imgStyle: {
 		position: "absolute",

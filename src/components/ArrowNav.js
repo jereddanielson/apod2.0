@@ -25,7 +25,7 @@ var ArrowNav = React.createClass({
 		return (
 			<div className={"arrow-nav " + this.props.direction} onClick={this.props.setNewDate}>
 				<div className="arrow-nav-inner">
-					<svg width="40" height="100" viewbox="0 0 40 100">
+					<svg width="40" height="100" viewBox="0 0 40 100">
 						<path stroke="white" strokeWidth="8" fill="none" d="M 35,5 L 5,50 L 35,95" />
 					</svg>
 				</div>

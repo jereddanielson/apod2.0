@@ -33,17 +33,17 @@ var SideBar = React.createClass({
 	},
 	titleStyle: {
 		fontFamily: "'Roboto Slab', monospace",
-		fontSize: "32px",
-		padding: 0,
+		fontSize: "28px",
+		padding: "0 20px",
 		margin: 0,
 		lineHeight: "80px",
-		textAlign: "center",
-		width: "50%",
 		height: "80px",
 		overflow: "hidden",
-		margin: "0 auto",
 		textOverflow: "ellipsis",
-		whiteSpace: "nowrap"
+		whiteSpace: "nowrap",
+		left: "50%",
+		transform: "translateX(-50%)",
+		position: "absolute"
 	},
 	explanationStyle: {
 		fontSize: "16px",
@@ -51,8 +51,8 @@ var SideBar = React.createClass({
 		background: "#101418",
 		border: "1px solid #202428",
 		padding: "20px",
-		top: "-10px",
-		width: "512px",
+		top: "60px",
+		width: "720px",
 		margin: "0 auto",
 		position: "relative",
 		zIndex: 20
@@ -67,7 +67,17 @@ var SideBar = React.createClass({
 			<div id="sidebar" style={this.style}>
 				<DateBox curDate={this.props.currentDate} setNewDate={this.props.setNewDate} />
 				<div id="sidebar-title" style={this.titleStyle}>{this.props.data.title}</div>
-				<div id="sidebar-explanation" style={this.explanationStyle}>{this.props.data.explanation}</div>
+				<div id="sidebar-explanation" style={this.explanationStyle}>
+					<div>{this.props.data.explanation}</div>
+					<div className="sidebar-sourceinfo">
+						<a target="_blank" href={"http://apod.nasa.gov/apod/ap" + this.props.currentDate.clone().format("YYMMDD").toString() + ".html"}>Source</a>
+						{(() => {if(this.props.data.copyright){
+							return " | Copyright: " + this.props.data.copyright;
+						} else {
+							return undefined;
+						}})()}
+					</div>
+				</div>
 			</div>
 		);
 	}

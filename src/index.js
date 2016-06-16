@@ -33,6 +33,7 @@ import ContentBox from "./components/ContentBox"
 import FilmStrip from "./components/FilmStrip"
 import HiRes from "./components/HiRes"
 import ArrowNav from "./components/ArrowNav"
+import Info from "./components/Info"
 
 var APP = React.createClass({
 	style: {
@@ -102,6 +103,7 @@ var APP = React.createClass({
 				}})()}
 				{this.state.initialImageLoaded ? <ArrowNav direction="next" setNewDate={this.loadNextEntry} /> : undefined}
 				{this.state.initialImageLoaded ? <ArrowNav direction="prev" setNewDate={this.loadPrevEntry} /> : undefined}
+				<Info />
 			</div>
 		);
 	},

@@ -20,19 +20,18 @@
 
 import React from "react"
 
-var Video = React.createClass({
-	iframeStyle: {
-		width: "960px",
-		height: "540px",
-		position: "absolute",
-		transform: "translate(-50%, -50%)",
-		boxShadow: "0 0 100px #404448"
-	},
+var Info = React.createClass({
 	render() {
 		return (
-			<iframe style={this.iframeStyle} src={this.props.vidsrc} frameBorder={0} allowFullScreen />
+			<div id="info-container">
+				<span className="icon-info" />
+				<div id="info-inner">
+					<p>APOD 2.0 is an open source project created to enhance the experience of viewing NASA's Astronomy Pictures of the Day.</p>
+					<p>Website copyright Jered Danielson 2016</p>
+				</div>
+			</div>
 		);
 	}
 });
 
-module.exports = Video;
+module.exports = Info;
