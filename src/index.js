@@ -156,6 +156,9 @@ var APP = React.createClass({
 				this.props.apod.preload(tomorrow);
 			}
 			this.props.apod.preload(Moment(_date).subtract(1, "days"));
+			// Send Google Analytics pageview
+			ga("set", "page", "#" + _date.toJSON().substring(0, 10));
+			ga("send", "pageview");
 		}
 	},
 	onIMGLoad(){
