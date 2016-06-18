@@ -128,7 +128,8 @@ var APP = React.createClass({
 		}
 	},
 	loadEntry(_date) {
-		location.hash = _date.toJSON().substring(0, 10);
+		var dateToLoad = _date.isSameOrBefore(this.earliestPossibleDate) ? earliestPossibleDate.clone() : _date;
+		location.hash = dateToLoad.toJSON().substring(0, 10);
 	},
 	fetchFromAPOD(_date){
 		// make sure new entry to load isn't past the cutoff date
@@ -159,6 +160,10 @@ var APP = React.createClass({
 			// Send Google Analytics pageview
 			ga("set", "page", "#" + _date.toJSON().substring(0, 10));
 			ga("send", "pageview");
+			// If we weren't loaded properly before, we are now!
+			if(!this.state.initialImageLoaded){
+				this.setState({initialImageLoaded: true});
+			}
 		}
 	},
 	onIMGLoad(){

@@ -48,8 +48,6 @@ var SideBar = React.createClass({
 	explanationStyle: {
 		fontSize: "16px",
 		letterSpacing: ".05em",
-		background: "#101418",
-		border: "1px solid #202428",
 		padding: "20px",
 		top: "60px",
 		width: "720px",
@@ -72,7 +70,7 @@ var SideBar = React.createClass({
 					<div className="sidebar-sourceinfo">
 						<a target="_blank" href={"http://apod.nasa.gov/apod/ap" + this.props.currentDate.clone().format("YYMMDD").toString() + ".html"}>Source</a>
 						{(() => {if(this.props.data.copyright){
-							return " | Copyright: " + this.props.data.copyright;
+							return " | Image \u00A9 " + this.props.data.copyright;
 						} else {
 							return undefined;
 						}})()}

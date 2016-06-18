@@ -26,6 +26,17 @@ var DayPicker = React.createClass({
 	getInitialState() {
 		return {isOpen: false};
 	},
+	componentWillMount() {
+		document.addEventListener("click", this.handleCancelClick);
+	},
+	componentWillUnmount() {
+		document.removeEventListener("click", this.handleCancelClick);
+	},
+	handleCancelClick(e) {
+		if(this.state.isOpen && e.target.id !== "day-picker-inner-id" && e.target.id !== "day-picker-num"){
+			this.setState({isOpen: false});
+		}
+	},
 	handleClick(e) {
 		this.setState({isOpen: true});
 	},
@@ -40,17 +51,20 @@ var DayPicker = React.createClass({
 		}
 		var self = this;
 		return (
-			<div className="day-picker">
-				<div onClick={this.handleClick}>{this.props.curDay}</div>
-				{(() => {if(this.state.isOpen){
-					return (<div className="day-picker-inner">
-						{datesArray.map(function(e){
-							return <div className={"day-picker-day picker-element " + (e === self.props.curDay ? "selected-picker-element" : "")} onClick={function(){self.handlePicked(e)}} key={"day-picker-" + e}>{e}</div>
-						})}
-					</div>)
-				} else {
-					return undefined;
-				}})()}
+
+			<div id="datebox-day" className={"datebox-component " + (this.state.isOpen ? "picker-is-open" : "")} style={{fontSize: "64px", display: "inline-block", textAlign: "center", padding: "5px", margin: "5px 0", lineHeight: "64px"}} >
+				<div className="day-picker" >
+					<div id="day-picker-num" onClick={this.handleClick}>{this.props.curDay}</div>
+					{(() => {if(this.state.isOpen){
+						return (<div id="day-picker-inner-id" className="day-picker-inner">
+							{datesArray.map(function(e){
+								return <div className={"day-picker-day picker-element " + (e === self.props.curDay ? "selected-picker-element" : "")} onClick={function(){self.handlePicked(e)}} key={"day-picker-" + e}>{e}</div>
+							})}
+						</div>)
+					} else {
+						return undefined;
+					}})()}
+				</div>
 			</div>
 		);
 	}

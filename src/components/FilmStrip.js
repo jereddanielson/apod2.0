@@ -40,7 +40,7 @@ var FilmStrip = React.createClass({
 	},
 	handleWheel(e){
 		var scrollAmount = e.deltaX + e.deltaY;
-		this.setState({scrollPos: Math.min(this.state.scrollPos + scrollAmount, 0)});
+		this.setState({scrollPos: Math.max(Math.min(this.state.scrollPos + scrollAmount, 0), -453120)});
 	},
 	getInitialState() {
 		return {scrollPos: 0, range: 1};
@@ -60,11 +60,11 @@ var FilmStrip = React.createClass({
 		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
 		if(dayFromScroll - 1 < props.currentDate.diff(Moment(), "days")){
 			// outside right bounds
-			this.setState({scrollPos: Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - props.currentDate.diff(Moment(), "days")) * 60});
+			this.setState({scrollPos: Math.max(-453120, Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - props.currentDate.diff(Moment(), "days")) * 60)});
 		}
 		if(dayFromScroll - this.state.range + 2 > props.currentDate.diff(Moment(), "days")){
 			// outside left bounds
-			this.setState({scrollPos: Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth % 60)});
+			this.setState({scrollPos: Math.max(-453120, Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth % 60))});
 		}
 	},
 	updateRange(){
@@ -89,7 +89,7 @@ var FilmStrip = React.createClass({
 				isNowDragging = true;
 			}
 			this.lastVelocity = this.lastClientX - e.clientX;
-			this.setState({scrollPos: Math.min(0, this.state.scrollPos + this.lastVelocity), isDragging: isNowDragging});
+			this.setState({scrollPos: Math.max(-453120, Math.min(0, this.state.scrollPos + this.lastVelocity)), isDragging: isNowDragging});
 			this.lastClientX = e.clientX;
 		}
 	},
@@ -98,7 +98,7 @@ var FilmStrip = React.createClass({
 		var self = this;
 		if(this.state.isDragging){
 			this.inertiaTween = TweenLite.to(this, 1, {lastVelocity: 0, onUpdate: function(){
-				self.setState({scrollPos: Math.min(0, self.state.scrollPos + self.lastVelocity), isDragging: false});
+				self.setState({scrollPos: Math.max(-453120, Math.min(0, self.state.scrollPos + self.lastVelocity)), isDragging: false});
 			}});
 		}
 	},

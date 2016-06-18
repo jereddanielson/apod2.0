@@ -57,7 +57,7 @@ var Image = React.createClass({
 		return (
 			<div className="image" style={this.style}>
 				{(() => {if(this.state.loaded){
-					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={this.props.imgsrc} />
+					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={this.props.imgsrc} alt={this.props.alt} title={this.props.title} />
 				} else {
 					return "";
 				}})()}

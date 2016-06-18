@@ -91,7 +91,7 @@ var APOD = function(){
 		ret.title = data.title;
 		ret.sdurl = data.url;
 		ret.fetchtime = Date.now();
-		ret.reactElement = (ret.mediatype === "image") ? <Image key={ret.date + "img"} imgsrc={ret.sdurl} /> : <Video key={ret.date + "vid"} vidsrc={ret.sdurl} />;
+		ret.reactElement = (ret.mediatype === "image") ? <Image key={ret.date + "img"} imgsrc={ret.sdurl} alt={ret.explanation} title={ret.title} /> : <Video key={ret.date + "vid"} vidsrc={ret.sdurl} alt={ret.explanation} title={ret.title} />;
 		dataCache.set(ret.date, ret);
 		callOnSuccess(ret);
 	}

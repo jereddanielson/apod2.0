@@ -30,7 +30,7 @@ var Video = React.createClass({
 	},
 	render() {
 		return (
-			<iframe style={this.iframeStyle} src={this.props.vidsrc} frameBorder={0} allowFullScreen />
+			<iframe style={this.iframeStyle} src={this.props.vidsrc} frameBorder={0} allowFullScreen alt={this.props.alt} title={this.props.title} />
 		);
 	}
 });

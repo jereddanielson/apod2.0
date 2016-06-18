@@ -34,16 +34,10 @@ var DateBox = React.createClass({
 	render() {
 		return (
 			<div id="datebox" style={this.style} >
-				<div id="datebox-day" className="datebox-component" style={{fontSize: "64px", display: "inline-block", textAlign: "right", padding: "10px", lineHeight: "64px"}} >
-					<DayPicker curDay={this.props.curDate ? this.props.curDate.date() : ""} daysInCurMonth={this.props.curDate ? this.props.curDate.clone().endOf("month").date() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
-				</div>
+				<DayPicker curDay={this.props.curDate ? this.props.curDate.date() : ""} daysInCurMonth={this.props.curDate ? this.props.curDate.clone().endOf("month").date() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
 				<div style={{display: "inline-block", marginLeft: "5px"}}>
-					<div id="datebox-month" className="datebox-component" style={{fontSize: "18px", padding: "5px"}} >
-						<MonthPicker curMonth={this.props.curDate ? this.props.curDate.clone().format("MMMM").toString() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
-					</div>
-					<div id="datebox-year" className="datebox-component" style={{fontSize: "18px", padding: "5px", display: "inline-block"}} >
-						<YearPicker curYear={this.props.curDate ? this.props.curDate.year() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
-					</div>
+					<MonthPicker curMonth={this.props.curDate ? this.props.curDate.clone().format("MMMM").toString() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
+					<YearPicker curYear={this.props.curDate ? this.props.curDate.year() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
 				</div>
 			</div>
 		);

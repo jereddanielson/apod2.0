@@ -52,11 +52,10 @@ var Thumbnail = React.createClass({
 		top: "-18px",
 		color: "#aaa",
 		padding: "5px",
-		background: "#101418",
-		border: "1px solid #202428",
+		background: "#202428",
+		border: "1px solid #404448",
 		fontSize: "12px",
 		fontFamily: "Open Sans, sans-serif",
-		backgroundColor: "black",
 		pointerEvents: "none",
 		zIndex: 50
 	},

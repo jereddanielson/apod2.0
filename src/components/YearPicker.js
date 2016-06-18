@@ -26,6 +26,17 @@ var YearPicker = React.createClass({
 	getInitialState() {
 		return {isOpen: false};
 	},
+	componentWillMount() {
+		document.addEventListener("click", this.handleCancelClick);
+	},
+	componentWillUnmount() {
+		document.removeEventListener("click", this.handleCancelClick);
+	},
+	handleCancelClick(e) {
+		if(this.state.isOpen && e.target.id !== "year-picker-inner-id" && e.target.id !== "year-picker-num"){
+			this.setState({isOpen: false});
+		}
+	},
 	handleClick(e) {
 		this.setState({isOpen: true});
 	},
@@ -34,20 +45,22 @@ var YearPicker = React.createClass({
 		this.props.setNewDate(this.props.curDateMoment.clone().year(e));
 	},
 	render() {
-		var datesArray = [1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016];
+		var datesArray = [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016];
 		var self = this;
 		return (
-			<div className="year-picker">
-				<div onClick={this.handleClick}>{this.props.curYear}</div>
-				{(() => {if(this.state.isOpen){
-					return (<div className="year-picker-inner">
-						{datesArray.map(function(e){
-							return <div className={"year-picker-year picker-element " + (e === self.props.curYear ? "selected-picker-element" : "")} onClick={function(){self.handlePicked(e)}} key={"year-picker-" + e}>{e}</div>
-						})}
-					</div>)
-				} else {
-					return undefined;
-				}})()}
+			<div id="datebox-year" className={"datebox-component " + (this.state.isOpen ? "picker-is-open" : "")} style={{fontSize: "18px", padding: "5px", display: "inline-block"}} >
+				<div className="year-picker">
+					<div id="year-picker-num" onClick={this.handleClick}>{this.props.curYear}</div>
+					{(() => {if(this.state.isOpen){
+						return (<div id="year-picker-inner-id" className="year-picker-inner">
+							{datesArray.map(function(e){
+								return <div className={"year-picker-year picker-element " + (e === self.props.curYear ? "selected-picker-element" : "")} onClick={function(){self.handlePicked(e)}} key={"year-picker-" + e}>{e}</div>
+							})}
+						</div>)
+					} else {
+						return undefined;
+					}})()}
+				</div>
 			</div>
 		);
 	}

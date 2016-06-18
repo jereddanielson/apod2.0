@@ -26,6 +26,17 @@ var MonthPicker = React.createClass({
 	getInitialState() {
 		return {isOpen: false};
 	},
+	componentWillMount() {
+		document.addEventListener("click", this.handleCancelClick);
+	},
+	componentWillUnmount() {
+		document.removeEventListener("click", this.handleCancelClick);
+	},
+	handleCancelClick(e) {
+		if(this.state.isOpen && e.target.id !== "month-picker-inner-id" && e.target.id !== "month-picker-num"){
+			this.setState({isOpen: false});
+		}
+	},
 	handleClick(e) {
 		this.setState({isOpen: true});
 	},
@@ -37,17 +48,19 @@ var MonthPicker = React.createClass({
 		var datesArray = [{num: 1, name: "January"}, {num: 2, name: "February"}, {num: 3, name: "March"}, {num: 4, name: "April"}, {num: 5, name: "May"}, {num: 6, name: "June"}, {num: 7, name: "July"}, {num: 8, name: "August"}, {num: 9, name: "September"}, {num: 10, name: "October"}, {num: 11, name: "November"}, {num: 12, name: "December"}, ];
 		var self = this;
 		return (
-			<div className="month-picker">
-				<div onClick={this.handleClick}>{this.props.curMonth}</div>
-				{(() => {if(this.state.isOpen){
-					return (<div className="month-picker-inner">
-						{datesArray.map(function(e){
-							return <div className={"month-picker-month picker-element " + (e.name === self.props.curMonth ? "selected-picker-element" : "")} onClick={function(){self.handlePicked(e.num)}} key={"month-picker-" + e.num}>{e.name}</div>
-						})}
-					</div>)
-				} else {
-					return undefined;
-				}})()}
+			<div id="datebox-month" className={"datebox-component " + (this.state.isOpen ? "picker-is-open" : "")} style={{fontSize: "18px", padding: "5px"}} >
+				<div className="month-picker">
+					<div id="month-picker-num" onClick={this.handleClick}>{this.props.curMonth}</div>
+					{(() => {if(this.state.isOpen){
+						return (<div id="month-picker-inner-id" className="month-picker-inner">
+							{datesArray.map(function(e){
+								return <div className={"month-picker-month picker-element " + (e.name === self.props.curMonth ? "selected-picker-element" : "")} onClick={function(){self.handlePicked(e.num)}} key={"month-picker-" + e.num}>{e.name}</div>
+							})}
+						</div>)
+					} else {
+						return undefined;
+					}})()}
+				</div>
 			</div>
 		);
 	}

@@ -26,8 +26,9 @@ var Info = React.createClass({
 			<div id="info-container">
 				<span className="icon-info" />
 				<div id="info-inner">
-					<p>APOD 2.0 is an open source project created to enhance the experience of viewing NASA's Astronomy Pictures of the Day.</p>
-					<p>Website copyright Jered Danielson 2016</p>
+					<p>APOD 2.0 is an open source project created to enhance the experience of viewing <a href="http://apod.nasa.gov" target="_blank">NASA's Astronomy Pictures of the Day.</a></p>
+					<p>Website &#169; <a href="http://jered.io" target="_blank">Jered Danielson</a> 2016, <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU GPL 3.0</a></p>
+					<p style={{fontSize: 24}}><a href="http://github.com/jereddanielson" target="_blank" style={{marginRight: 12}}><span className="icon-github" /></a><a href="mailto:jereddanielson@gmail.com" target="_blank"><span className="icon-mail4" /></a></p>
 				</div>
 			</div>
 		);

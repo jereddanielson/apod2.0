@@ -22,11 +22,11 @@
 
 @font-face {
     font-family: 'icomoon';
-    src:    url('fonts/icomoon.eot?xwxatn');
-    src:    url('fonts/icomoon.eot?xwxatn#iefix') format('embedded-opentype'),
-        url('fonts/icomoon.ttf?xwxatn') format('truetype'),
-        url('fonts/icomoon.woff?xwxatn') format('woff'),
-        url('fonts/icomoon.svg?xwxatn#icomoon') format('svg');
+    src:    url('fonts/icomoon.eot?cz4m1i');
+    src:    url('fonts/icomoon.eot?cz4m1i#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.ttf?cz4m1i') format('truetype'),
+        url('fonts/icomoon.woff?cz4m1i') format('woff'),
+        url('fonts/icomoon.svg?cz4m1i#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -46,17 +46,14 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-file-text:before {
-    content: "\e922";
-}
-.icon-calendar:before {
-    content: "\e953";
-}
-.icon-question:before {
-    content: "\ea09";
-}
 .icon-info:before {
     content: "\ea0c";
+}
+.icon-mail4:before {
+    content: "\ea86";
+}
+.icon-github:before {
+    content: "\eab0";
 }
 
 /* End Icomoon fonts */
@@ -68,7 +65,10 @@ body {
 }
 
 #sidebar-explanation {
-	transition: .2s ease-in-out;
+	background: #202428;
+	border: 1px solid #404448;
+	transition: all .15s cubic-bezier(.25, 0, 0, 1);
+	transform: translateY(-8px);
 	opacity: 0;
 	-webkit-user-select: none;
 	   -moz-user-select: none;
@@ -80,10 +80,11 @@ body {
 #sidebar-title:hover + #sidebar-explanation, #sidebar-explanation:hover {
 	opacity: 1;
 	pointer-events: auto;
+	transform: translateY(0px);
 }
 
 #sidebar-title {
-	transition: .2s ease-in-out;
+	transition: all .15s cubic-bezier(.25, 0, 0, 1);
 	-webkit-user-select: none;
 	user-select: none;
 	cursor: default;
@@ -93,7 +94,7 @@ body {
 }
 
 .datebox-component {
-	transition: .2s ease-in-out;
+	transition: .15s cubic-bezier(.25, 0, 0, 1);
 	cursor: pointer;
 	-webkit-user-select: none;
 	   -moz-user-select: none;
@@ -101,16 +102,18 @@ body {
 	        user-select: none;
 	background: transparent;
 	border: 1px solid transparent;
+	position: relative;
+	min-width: 40px;
 }
 
-.datebox-component:hover {
+.datebox-component:hover, .datebox-component.picker-is-open {
 	background: #202428;
 	border: 1px solid #404448;
 }
 
 .icon {
 	margin: 20px;
-	transition: .15s ease-in-out;
+	transition: .15s cubic-bezier(.25, 0, 0, 1);
 }
 
 .icon:hover {
@@ -145,25 +148,38 @@ img, .thumbnail {
 
 .day-picker, .month-picker, .year-picker {
 	position: relative;
-	z-index: 1000;
 }
 
 .day-picker-inner, .month-picker-inner, .year-picker-inner {
 	position: absolute;
-	left: 0;
+	left: 50%;
 	top: 100%;
+	transform: translate(-50%, 5px);
 	font-size: 2vh;
 	line-height: 2.25vh;
 	background: #202428;
+	border: 1px solid #404448;
+	border-top: 1px dashed #303438;
 	color: white;
 	min-width: 100%;
 	text-align: center;
+	z-index: 50;
+}
+
+.month-picker-inner .picker-element, .year-picker-inner .picker-element {
+	font-size: 16px;
+	line-height: 16px;
+	padding: 5px;
+}
+
+.picker-element {
+	box-sizing: border-box;
+	border: 1px solid transparent;
 }
 
 .picker-element:hover {
 	background: #888;
 	border: 1px solid #ccc;
-	box-sizing: border-box;
 }
 
 .selected-picker-element {
@@ -177,9 +193,9 @@ img, .thumbnail {
 	top: 50%;
 	transform: translateY(-50%);
 	cursor: pointer;
-	opacity: .5;
-	z-index: 500;
-	transition: all .3s ease-in-out;
+	opacity: .35;
+	z-index: 10;
+	transition: all .15s cubic-bezier(.25, 0, 0, 1);
 }
 
 .arrow-nav:hover {
@@ -195,9 +211,14 @@ img, .thumbnail {
 	transform: scaleX(-1);
 }
 
-.sidebar-sourceinfo a {
+a {
 	color: #6EC8CD;
 	cursor: pointer;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 .sidebar-sourceinfo {
@@ -217,25 +238,27 @@ img, .thumbnail {
 	color: #ccc;
 }
 
-#info-container:hover + #info-inner, #info-inner:hover {
+#info-container:hover #info-inner, #info-inner:hover {
 	opacity: 1;
 	pointer-events: auto;
+	transform: translateY(0px);
 }
 
 #info-inner {
 	position: absolute;
 	right: 0;
 	top: 60px;
-	width: 400px;
+	width: 480px;
 	opacity: 0;
 	padding: 0 20px;
 	pointer-events: none;
-	transition: .3s ease-in-out;
 	font-size: 16px;
 	line-height: normal;
 	background: #202428;
 	border: 1px solid #404448;
 	text-align: left;
+	transform: translateY(-8px);
+	transition: all .15s cubic-bezier(.25, 0, 0, 1);
 }
 
 /* End document styles */
