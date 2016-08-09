@@ -24,7 +24,7 @@ import TweenLite from "gsap"
 
 var Moment = require("moment");
 
-import Thumbnail from "./Thumbnail"
+import Thumbnail from "./Thumbnail.jsx"
 
 var FilmStrip = React.createClass({
 	style: {

@@ -19,7 +19,7 @@
 */
 
 import React from "react"
-import DateBox from "./DateBox"
+import DateBox from "./DateBox.jsx"
 
 var Moment = require("moment");
 

@@ -38,8 +38,8 @@ var Moment = require("moment");
 
 import $ from "jquery"
 
-import Image from "../Components/Image"
-import Video from "../Components/Video"
+import Image from "../Components/Image.jsx"
+import Video from "../Components/Video.jsx"
 
 var APOD = function(){
 	var _KEY = "mwTWt97WoV91jHjbgdnjNbYSx9WtAZ91ZBfGUkIl";

@@ -19,9 +19,9 @@
 */
 
 import React from "react"
-import DayPicker from "./DayPicker"
-import MonthPicker from "./MonthPicker"
-import YearPicker from "./YearPicker"
+import DayPicker from "./DayPicker.jsx"
+import MonthPicker from "./MonthPicker.jsx"
+import YearPicker from "./YearPicker.jsx"
 
 var DateBox = React.createClass({
 	style: {

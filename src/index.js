@@ -25,15 +25,15 @@ import ReactDOM from "react-dom"
 
 var Moment = require("moment");
 
-import APOD from "./modules/APOD"
+import APOD from "./modules/APOD.jsx"
 
-import Menu from "./components/Menu"
-import SideBar from "./components/SideBar"
-import ContentBox from "./components/ContentBox"
-import FilmStrip from "./components/FilmStrip"
-import HiRes from "./components/HiRes"
-import ArrowNav from "./components/ArrowNav"
-import Info from "./components/Info"
+import Menu from "./components/Menu.jsx"
+import SideBar from "./components/SideBar.jsx"
+import ContentBox from "./components/ContentBox.jsx"
+import FilmStrip from "./components/FilmStrip.jsx"
+import HiRes from "./components/HiRes.jsx"
+import ArrowNav from "./components/ArrowNav.jsx"
+import Info from "./components/Info.jsx"
 
 var APP = React.createClass({
 	style: {
