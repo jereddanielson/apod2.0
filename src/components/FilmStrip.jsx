@@ -102,6 +102,20 @@ var FilmStrip = React.createClass({
 			}});
 		}
 	},
+	handleTouchStart(e){
+		this.handlePointerStart({clientX: e.touches[0].clientX});
+	},
+	handleTouchMove(e){
+		if(this.state.isDragging){
+			e.preventDefault(); // prevent scroll if filmstrip is dragging
+		}
+		this.handlePointerMove({clientX: e.touches[0].clientX});
+	},
+	handleTouchUp(e){
+		if(e.touches.length == 0){
+			this.handlePointerUp(e);
+		}
+	},
 	render() {
 		//console.log(Date.now());
 		var dateArr = []; // all the dates to show (date strings)
@@ -125,7 +139,7 @@ var FilmStrip = React.createClass({
 		var self = this;
 
 		return (
-			<div id="filmstrip" onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handlePointerStart} onTouchMove={this.handlePointerMove} onTouchEnd={this.handlePointerUp} onTouchCancel={this.handlePointerUp} style={this.style}>
+			<div id="filmstrip" onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchUp} onTouchCancel={this.handleTouchUp} style={this.style}>
 				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
 						return <Thumbnail isSelected={dateString == self.props.currentDate.toJSON().substring(0, 10) ? true : undefined} key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />

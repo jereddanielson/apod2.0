@@ -102,7 +102,7 @@ var APOD = function(){
 	@param {function} callOnFail - Callback
 	*/
 	function onError(e, callOnFail, _dateString = Date.now()){
-		console.log("Error retrieving data from NASA APOD API. '"+_dateString+"' probably does not exist (yet!)");
+		console.log("Error " + (e.status) + " while retrieving data from NASA APOD API. '"+_dateString+"' probably does not exist.");
 		callOnFail(e);
 	}
 

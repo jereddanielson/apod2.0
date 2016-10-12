@@ -29,7 +29,8 @@ var DateBox = React.createClass({
 		position: "absolute",
 		left: "10px",
 		top: 0,
-		fontFamily: "'Roboto Slab', monospace"
+		fontFamily: "'Roboto Slab', monospace",
+		zIndex: 100
 	},
 	render() {
 		return (

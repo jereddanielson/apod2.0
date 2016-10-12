@@ -14,7 +14,7 @@
 4 verbose stack     at tryToString (fs.js:414:3)
 4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:401:12)
 5 verbose cwd /Users/jered/apod-project/apod2.0
-6 error Darwin 15.6.0
+6 error Darwin 16.0.0
 7 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
 8 error node v5.0.0
 9 error npm  v3.3.6

@@ -33,7 +33,6 @@ var SideBar = React.createClass({
 	},
 	titleStyle: {
 		fontFamily: "'Roboto Slab', monospace",
-		fontSize: "28px",
 		padding: "0 20px",
 		margin: 0,
 		lineHeight: "80px",
@@ -53,7 +52,9 @@ var SideBar = React.createClass({
 		width: "720px",
 		margin: "0 auto",
 		position: "relative",
-		zIndex: 20
+		zIndex: 20,
+		maxWidth: "100vw",
+		boxSizing: "border-box"
 	},
 	pStyle: {
 		color: "#aaa",
