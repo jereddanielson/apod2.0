@@ -62,7 +62,7 @@ var FilmStrip = React.createClass({
 			// outside right bounds
 			this.setState({scrollPos: Math.max(-453120, Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - props.currentDate.diff(Moment(), "days")) * 60)});
 		}
-		if(dayFromScroll - this.state.range + 2 > props.currentDate.diff(Moment(), "days")){
+		if(dayFromScroll - this.state.range + 4 > props.currentDate.diff(Moment(), "days")){
 			// outside left bounds
 			this.setState({scrollPos: Math.max(-453120, Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth % 60))});
 		}

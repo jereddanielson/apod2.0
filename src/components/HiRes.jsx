@@ -39,9 +39,10 @@ var HiRes = React.createClass({
 		boxShadow: "0 0 100px #404448"
 	},
 	render(){
+		var url = this.props.url.replace("http://", "https://");
 		return (
 			<div style={this.style} onClick={this.props.toggleHiRes}>
-				<img style={this.imgStyle} src={this.props.url} />
+				<img style={this.imgStyle} src={url} />
 			</div>
 		);
 	}

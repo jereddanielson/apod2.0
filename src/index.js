@@ -44,6 +44,7 @@ var APP = React.createClass({
 		overflow: "hidden"
 	},
 	earliestPossibleDate: Moment("1995-09-22"),
+	latestPossibleDate: Moment(),
 	getInitialState() {
 		return {date: {}, data: {}, showHiRes: false, initialImageLoaded: false};
 	},
@@ -101,7 +102,7 @@ var APP = React.createClass({
 						{this.state.data.reactElement}
 					</ContentBox>
 				}})()}
-				{this.state.initialImageLoaded ? <ArrowNav direction="next" setNewDate={this.loadNextEntry} /> : undefined}
+				{Moment(this.state.date).add(1, "days").isSameOrAfter(this.latestPossibleDate) ? undefined : this.state.initialImageLoaded ? <ArrowNav direction="next" setNewDate={this.loadNextEntry} /> : undefined}
 				{this.state.initialImageLoaded ? <ArrowNav direction="prev" setNewDate={this.loadPrevEntry} /> : undefined}
 				<Info />
 			</div>
@@ -128,7 +129,8 @@ var APP = React.createClass({
 		}
 	},
 	loadEntry(_date) {
-		var dateToLoad = _date.isSameOrBefore(this.earliestPossibleDate) ? earliestPossibleDate.clone() : _date;
+		var dateToLoad = _date.isSameOrBefore(this.earliestPossibleDate) ? this.earliestPossibleDate.clone() : _date;
+		dateToLoad = dateToLoad.isSameOrAfter(this.latestPossibleDate) ? this.latestPossibleDate.clone() : dateToLoad;
 		location.hash = dateToLoad.toJSON().substring(0, 10);
 	},
 	fetchFromAPOD(_date){

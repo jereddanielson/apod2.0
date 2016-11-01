@@ -29,8 +29,9 @@ var Video = React.createClass({
 		boxShadow: "0 0 100px #404448"
 	},
 	render() {
+		var vidsrc = this.props.vidsrc.replace("http://", "https://");
 		return (
-			<iframe style={this.iframeStyle} src={this.props.vidsrc} frameBorder={0} allowFullScreen alt={this.props.alt} title={this.props.title} />
+			<iframe style={this.iframeStyle} src={vidsrc} frameBorder={0} allowFullScreen alt={this.props.alt} title={this.props.title} />
 		);
 	}
 });

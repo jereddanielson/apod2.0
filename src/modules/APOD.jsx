@@ -118,7 +118,8 @@ var APOD = function(){
 			// preload by creating image element (only if mediatype is an image, not video)
 			if(d.mediatype === "image"){
 				var img = document.createElement("img");
-				img.src = d.sdurl;
+				var url = d.sdurl.replace("http://", "https://");
+				img.src = url;
 			}
 		}, onFail);
 	}

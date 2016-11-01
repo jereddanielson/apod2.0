@@ -45,7 +45,8 @@ var Image = React.createClass({
 		// when mounted, create and load image
 		var imgElement = document.createElement("img");
 		imgElement.onload = this.handleLoaded;
-		imgElement.src = this.props.imgsrc;
+		var imgsrc = this.props.imgsrc.replace("http://", "https://");
+		imgElement.src = imgsrc;
 	},
 	handleLoaded() {
 		// once image successfully loads, switch loaded flag
@@ -54,10 +55,11 @@ var Image = React.createClass({
 		}
 	},
 	render() {
+		var imgsrc = this.props.imgsrc.replace("http://", "https://");
 		return (
 			<div className="image" style={this.style}>
 				{(() => {if(this.state.loaded){
-					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={this.props.imgsrc} alt={this.props.alt} title={this.props.title} />
+					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={imgsrc} alt={this.props.alt} title={this.props.title} />
 				} else {
 					return "";
 				}})()}

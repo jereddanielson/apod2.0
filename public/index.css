@@ -77,6 +77,11 @@ body {
 	pointer-events: none;
 }
 
+#sidebar-title:hover {
+	width: 720px;
+	max-width: 50vw;
+}
+
 #sidebar-title:hover + #sidebar-explanation, #sidebar-explanation:hover {
 	opacity: 1;
 	pointer-events: auto;
@@ -90,12 +95,21 @@ body {
 	cursor: default;
 	font-size: 28px;
 	max-width: 50vw;
+	text-align: center;
 }
 
 @media screen and (max-width: 640px){
 	#sidebar-title {
 		font-size: 16px;
 		max-width: 40vw;
+	}
+	#sidebar-title:hover {
+		width: auto !important;
+		max-width: auto !important;
+	}
+	#info-container:hover {
+		width: auto !important;
+		max-width: auto !important;
 	}
 	#datebox {
 		transform: scale(.5);
