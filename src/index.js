@@ -111,7 +111,7 @@ var APP = React.createClass({
 	loadInitialImage(){
 		var _self = this;
 		var dateToLoad = Moment(location.hash.substring(1, 11));
-		if(dateToLoad.isValid()){
+		if(dateToLoad.isValid() && dateToLoad.isSameOrBefore(this.latestPossibleDate) && dateToLoad.isSameOrAfter(this.earliestPossibleDate)){
 			// seems to be a valid date in the URL hash
 			this.props.apod.get(dateToLoad, function(d){
 				var curDate = Moment(d.date);
