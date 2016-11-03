@@ -47,13 +47,25 @@
 }
 
 .icon-info:before {
-    content: "\ea0c";
+  content: "\ea0c";
+}
+.icon-last:before {
+  content: "\ea22";
+}
+.icon-new-tab:before {
+  content: "\ea7e";
 }
 .icon-mail4:before {
-    content: "\ea86";
+  content: "\ea86";
 }
 .icon-github:before {
-    content: "\eab0";
+  content: "\eab0";
+}
+.icon-tumblr:before {
+  content: "\eab9";
+}
+.icon-stackoverflow:before {
+  content: "\ead0";
 }
 
 /* End Icomoon fonts */
