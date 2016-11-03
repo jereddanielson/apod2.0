@@ -72,6 +72,7 @@ var Thumbnail = React.createClass({
 	render() {
 		return (
 			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
+				<div style={{position: "absolute", width: 20, height: 20, borderRadius: 10, background: "rgba(255, 255, 255, 0.25)", left: "50%", top: "50%", transform: "translate(-50%, -50%)"}}></div>
 				<img style={this.imgStyle} onDragStart={function(e){e.preventDefault();}} src={"https://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg"} />
 				{(() => {if(this.props.isSelected){
 					return <div style={Object.assign({}, this.overlayStyle, this.activeStyle)} className="thumbnail-overlay"></div>

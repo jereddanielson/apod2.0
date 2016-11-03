@@ -296,4 +296,68 @@ a:hover {
 	transition: all .15s cubic-bezier(.25, 0, 0, 1);
 }
 
+.loading-anim {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.LA-1, .LA-2 {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  transform: translate(0%, 0%);
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: infinite;
+  background: #202428;
+  left: 50%;
+  top: 50%;
+}
+
+.LA-1 {
+  animation-name: LA-keys-1;
+}
+
+.LA-2 {
+  animation-name: LA-keys-2;
+}
+
+@keyframes LA-keys-1 {
+  0% {
+    transform: translate(0%, 0%) rotate(0deg);
+  }
+  25% {
+    transform: translate(-100%, 0%) rotate(0deg);
+  }
+  50% {
+    transform: translate(-100%, -100%) rotate(-90deg);
+  }
+  75% {
+    transform: translate(0%, -100%) rotate(-90deg);
+  }
+  100% {
+    transform: translate(0%, 0%) rotate(-180deg);
+  }
+}
+
+@keyframes LA-keys-2 {
+  0% {
+    transform: translate(-100%, -100%) rotate(0deg);
+  }
+  25% {
+    transform: translate(0%, -100%) rotate(-90deg);
+  }
+  50% {
+    transform: translate(0%, 0%) rotate(-90deg);
+  }
+  75% {
+    transform: translate(-100%, 0%) rotate(-180deg);
+  }
+  100% {
+    transform: translate(-100%, -100%) rotate(-180deg);
+  }
+}
+
 /* End document styles */

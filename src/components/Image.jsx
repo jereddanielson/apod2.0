@@ -61,7 +61,7 @@ var Image = React.createClass({
 				{(() => {if(this.state.loaded){
 					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={imgsrc} alt={this.props.alt} title={this.props.title} />
 				} else {
-					return "";
+					return <div className="loading-anim"><div className="LA-1"></div><div className="LA-2"></div></div>;
 				}})()}
 			</div>
 		);
