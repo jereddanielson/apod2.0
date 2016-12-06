@@ -100,10 +100,25 @@ var APOD = function(){
 	Execute the onFail callback from APOD.get().
 	@param {object} e - Error data from the APOD API
 	@param {function} callOnFail - Callback
+	@param [string] _dateString - Date string of the error
 	*/
 	function onError(e, callOnFail, _dateString = Date.now()){
 		console.log("Error " + (e.status) + " while retrieving data from NASA APOD API. '"+_dateString+"' probably does not exist.");
-		callOnFail(e);
+		var ret = {};
+		ret.date = _dateString;
+		ret.mediatype = "error";
+		ret.title = "API Error";
+		ret.explanation = "NASA'S API generated an error. Try viewing the original webpage on their website."
+		var errorStyle = {
+			position: "absolute",
+			color: "#ddd",
+			width: "100vw",
+			transform: "translate(-50%, -50%)",
+			textAlign: "center"
+		};
+		ret.reactElement = <div style={errorStyle} className="api-error-element">Error retrieving {ret.date}.<br/>This is likely a problem with NASA's API and I can't fix it.</div>;
+		dataCache.set(ret.date, ret);
+		callOnFail(ret);
 	}
 
 	/*

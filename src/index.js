@@ -117,6 +117,10 @@ var APP = React.createClass({
 				var curDate = Moment(d.date);
 				_self.setState({date: curDate, initialImageLoaded: true});
 				_self.updateData(d, curDate);
+			}, function(d){
+				var curDate = Moment(d.date);
+				_self.setState({date: curDate, initialImageLoaded: true});
+				_self.updateData(d, curDate);
 			});
 		} else {
 			// no valid URL hash for the date
@@ -142,8 +146,10 @@ var APP = React.createClass({
 			_self.props.apod.get(_date, function(d){
 				_self.updateData(d, _date);
 			}, function(d){
-				// failed
+				_self.updateData(d, _date);
 			});
+		} else {
+			this.loadInitialImage();
 		}
 	},
 	updateData(_data, _date){
