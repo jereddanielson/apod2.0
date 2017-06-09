@@ -4,6 +4,9 @@
 	Basically it just does things like keep track of the screen size, FilmStrip position,
 	and scroll events.
 
+	One of its most important roles is keeping only the necessary thumbnails loaded,
+	by dynamically loading/unloading HTML elements on the fly.
+
 	Thumbnail images are pulled from a NASA service that automatically generates them.
 	They follow a naming convention that makes it fairly easy to access.
 	However it's not always reliable and some images are broken.
