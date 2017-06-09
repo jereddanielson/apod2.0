@@ -1,4 +1,13 @@
 /*
+	FilmStrip is the image strip at the bottom of the page.
+	It's fairly complicated and has a few magic numbers, making it hard to decipher.
+	Basically it just does things like keep track of the screen size, FilmStrip position,
+	and scroll events.
+
+	Thumbnail images are pulled from a NASA service that automatically generates them.
+	They follow a naming convention that makes it fairly easy to access.
+	However it's not always reliable and some images are broken.
+
 	Copyright 2016, Jered Danielson
 	jered@uw.edu
 
