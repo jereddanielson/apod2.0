@@ -24,7 +24,12 @@ var Moment = require("moment");
 
 var YearPicker = React.createClass({
 	getInitialState() {
-		return {isOpen: false};
+		let theDates = [];
+		let currentYear = new Date().getFullYear();
+		for(let i = 1995; i <= currentYear; i++){
+			theDates.push(i);
+		}
+		return {isOpen: false, datesArray: theDates};
 	},
 	componentWillMount() {
 		document.addEventListener("click", this.handleCancelClick);
@@ -45,7 +50,7 @@ var YearPicker = React.createClass({
 		this.props.setNewDate(this.props.curDateMoment.clone().year(e));
 	},
 	render() {
-		var datesArray = [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016];
+		var datesArray = this.state.datesArray;
 		var self = this;
 		return (
 			<div id="datebox-year" className={"datebox-component " + (this.state.isOpen ? "picker-is-open" : "")} style={{fontSize: "18px", padding: "5px", display: "inline-block"}} >
