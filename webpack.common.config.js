@@ -1,5 +1,5 @@
 /*
-	Copyright 2016, Jered Danielson
+	Copyright 2018, Jered Danielson
 	jered@uw.edu
 
 	This file is part of APOD 2.0.
@@ -19,16 +19,27 @@
 */
 
 module.exports = {
-	entry: "./src/index.js",
+	entry: './src/index.js',
 	output: {
-		filename: "./public/bundle.js"
+		path: __dirname + '/dist',
+		publicPath: '/',
+		filename: 'bundle.js',
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
-				exclude: /(node_modules|app-server.js|package.json)/,
-				loader: "babel?presets[]=react,presets[]=es2015"
-			}
-		]
-	}
-}
+				test: /\.jsx?$/,
+				exclude: /(node_modules)/,
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env', '@babel/preset-react'],
+					},
+				},
+			},
+		],
+	},
+	resolve: {
+		extensions: ['*', '.js', '.jsx']
+	},
+};
