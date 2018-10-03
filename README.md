@@ -14,24 +14,24 @@ At some point I'll need to petition NASA for an API key capable of handling more
 ### Installation:
 
 Clone repo.
-> `~ git clone https://github.com/jereddanielson/apod2.0.git`
+> `git clone https://github.com/jereddanielson/apod2.0.git`
 
 Enter new directory and install with npm (you may or may not need sudo).
-> `~ cd apod2.0`
+> `cd apod2.0`
 
-> `~ sudo npm install`
+> `npm install`
 
-### Build & Run:
+### Development:
 
-Use webpack to package everything. Make sure you're in the apod2.0 folder.
-> `~ webpack`
+Run the NPM `dev` script to run `webpack-dev-server` on port `8080`.
+> `npm run dev`
 
-Start an HTTP server of your choice from the public directory.
-> `~ cd public`
+### Build:
 
-> `~ http-server -c-1`
+To build to the `dist` folder:
+> `npm run build`
 
-Copyright Jered Danielson, GNU GPL v3.0, 2016
+Copyright Jered Danielson, GNU GPL v3.0, 2018
 
 APOD 2.0 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
