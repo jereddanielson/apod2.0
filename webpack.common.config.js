@@ -18,12 +18,14 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports = {
 	entry: './src/index.js',
 	output: {
 		path: __dirname + '/dist',
 		publicPath: '/',
-		filename: 'bundle.js',
+		filename: 'bundle-[hash:6].js',
 	},
 	module: {
 		rules: [
@@ -39,6 +41,14 @@ module.exports = {
 			},
 		],
 	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			title: 'APOD 2.0',
+			meta: {
+				viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
+			},
+		}),
+	],
 	resolve: {
 		extensions: ['*', '.js', '.jsx']
 	},
