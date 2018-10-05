@@ -8,8 +8,8 @@
     "email": "belross@gmail.com"
   },
   "scripts": {
-    "dev": "webpack-dev-server --open --config webpack.dev.config.js",
-    "build": "rm -rf dist && webpack --config webpack.prod.config.js"
+    "dev": "parcel ./src/index.html",
+    "build": "rm -rf dist && parcel build ./src/index.html"
   },
   "license": "GPL 3.0",
   "repository": {
@@ -17,19 +17,13 @@
     "url": "https://github.com/jereddanielson/apod.git"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.4",
-    "html-webpack-plugin": "^3.2.0",
-    "react-hot-loader": "^4.3.11",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2",
-    "webpack-dev-server": "^3.1.9",
-    "webpack-merge": "^4.1.4"
+    "babel-core": "^6.26.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "parcel-bundler": "^1.10.1"
   },
   "dependencies": {
-    "date-fns": "^1.29.0",
+    "normalize.css": "^8.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2"
   }
