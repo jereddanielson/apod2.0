@@ -1,0 +1,22 @@
+@import 'normalize.css';
+
+$darkgray: #353438;
+$lightgray: #b0b0b0;
+$text: #ebebeb;
+$orange: #de5e19;
+$lightorange: #fa8647;
+
+body, html {
+  background: $darkgray;
+  color: $text;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a, a:visited {
+  color: $orange;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $lightorange;
+}
