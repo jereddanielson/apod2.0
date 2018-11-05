@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function TM_FILENAME_BASE() {
+export default function Info() {
   return (<div></div>);
 }
