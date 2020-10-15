@@ -32,116 +32,157 @@
 	- Keep track of inprogress requests in a Map and discard duplicate requests
 */
 
-import React from "react"
+import React from "react";
 
 var Moment = require("moment");
 
-import $ from "jquery"
+import $ from "jquery";
 
-import Image from "../Components/Image.jsx"
-import Video from "../Components/Video.jsx"
+import Image from "../Components/Image.jsx";
+import Video from "../Components/Video.jsx";
 
-var APOD = function(){
-	var _KEY = "mwTWt97WoV91jHjbgdnjNbYSx9WtAZ91ZBfGUkIl";
-	var _URL = "https://api.nasa.gov/planetary/apod?hd=true&api_key=" + _KEY;
+var APOD = function () {
+  var _KEY = "hPaH1pkRnLdLYfTomsTcKa69ebwlMceO2gTqb2fJ";
+  var _URL = "https://api.nasa.gov/planetary/apod?hd=true&api_key=" + _KEY;
 
-	// map of cached data pulled from the API
-	var dataCache = new Map();
+  // map of cached data pulled from the API
+  var dataCache = new Map();
 
-	/*
+  /*
 	Query the APOD API for a date and get the data.
 	Calls the passed onSuccess and onFail functions as callbacks
 	@param {Date} date - Date to retrieve data for
 	@param {function} onSuccess - Callback for successful API retrieval
 	@param {function} [onFail] - Callback for failure
 	*/
-	this.get = function(date, onSuccess = function(d){}, onFail = function(d){}){
-		// first check to see if we have an entry for this in "data"
+  this.get = function (
+    date,
+    onSuccess = function (d) {},
+    onFail = function (d) {}
+  ) {
+    // first check to see if we have an entry for this in "data"
 
-		// key date string for looking up date
-		var dateString = (date !== undefined) ? date.toJSON().substring(0, 10) : undefined;
-		if(date !== undefined && dataCache.has(dateString)){
-			// load from "data"
-			onSuccess(dataCache.get(dateString));
-		} else {
-			// load from API
-			$.ajax({url: _URL + (date !== undefined ? "&date=" + (date.toJSON().substring(0, 10)) : ""), dataType: "json",
-			success: function(data){
-				onGetComplete(data, onSuccess);
-			},
-			error: function(e){
-				onError(e, onFail, dateString);
-			}});
-		}
-	};
+    // key date string for looking up date
+    var dateString =
+      date !== undefined ? date.toJSON().substring(0, 10) : undefined;
+    if (date !== undefined && dataCache.has(dateString)) {
+      // load from "data"
+      onSuccess(dataCache.get(dateString));
+    } else {
+      // load from API
+      $.ajax({
+        url:
+          _URL +
+          (date !== undefined ? "&date=" + date.toJSON().substring(0, 10) : ""),
+        dataType: "json",
+        success: function (data) {
+          onGetComplete(data, onSuccess);
+        },
+        error: function (e) {
+          onError(e, onFail, dateString);
+        },
+      });
+    }
+  };
 
-	/*
+  /*
 	Execute the onSuccess callback from APOD.get().
 	Creates an object to pass to the callback, then calls the callback with object.
 	@param {object} data - Data retrieved from the APOD API
 	@param {function} callOnSuccess - Callback to pass the formatted data to
 	*/
-	function onGetComplete(data, callOnSuccess){
-		var ret = {};
-		ret.copyright = data.copyright;
-		ret.date = data.date;
-		ret.explanation = data.explanation;
-		ret.hdurl = data.hdurl;
-		ret.mediatype = data.media_type;
-		ret.title = data.title;
-		ret.sdurl = data.url;
-		ret.fetchtime = Date.now();
-		ret.reactElement = (ret.mediatype === "image") ? <Image key={ret.date + "img"} imgsrc={ret.sdurl} alt={ret.explanation} title={ret.title} /> : <Video key={ret.date + "vid"} vidsrc={ret.sdurl} alt={ret.explanation} title={ret.title} />;
-		dataCache.set(ret.date, ret);
-		callOnSuccess(ret);
-	}
+  function onGetComplete(data, callOnSuccess) {
+    var ret = {};
+    ret.copyright = data.copyright;
+    ret.date = data.date;
+    ret.explanation = data.explanation;
+    ret.hdurl = data.hdurl;
+    ret.mediatype = data.media_type;
+    ret.title = data.title;
+    ret.sdurl = data.url;
+    ret.fetchtime = Date.now();
+    ret.reactElement =
+      ret.mediatype === "image" ? (
+        <Image
+          key={ret.date + "img"}
+          imgsrc={ret.sdurl}
+          alt={ret.explanation}
+          title={ret.title}
+        />
+      ) : (
+        <Video
+          key={ret.date + "vid"}
+          vidsrc={ret.sdurl}
+          alt={ret.explanation}
+          title={ret.title}
+        />
+      );
+    dataCache.set(ret.date, ret);
+    callOnSuccess(ret);
+  }
 
-	/*
+  /*
 	Execute the onFail callback from APOD.get().
 	@param {object} e - Error data from the APOD API
 	@param {function} callOnFail - Callback
 	@param [string] _dateString - Date string of the error
 	*/
-	function onError(e, callOnFail, _dateString = Date.now()){
-		console.log("Error " + (e.status) + " while retrieving data from NASA APOD API. '"+_dateString+"' probably does not exist.");
-		var ret = {};
-		ret.date = _dateString;
-		ret.mediatype = "error";
-		ret.title = "API Error";
-		ret.explanation = "NASA'S API generated an error. Try viewing the original webpage on their website."
-		var errorStyle = {
-			position: "absolute",
-			color: "#ddd",
-			width: "100vw",
-			transform: "translate(-50%, -50%)",
-			textAlign: "center"
-		};
-		ret.reactElement = <div style={errorStyle} className="api-error-element">Error retrieving {ret.date}.<br/>This is likely a problem with NASA's API and I can't fix it.</div>;
-		dataCache.set(ret.date, ret);
-		callOnFail(ret);
-	}
+  function onError(e, callOnFail, _dateString = Date.now()) {
+    console.log(
+      "Error " +
+        e.status +
+        " while retrieving data from NASA APOD API. '" +
+        _dateString +
+        "' probably does not exist."
+    );
+    var ret = {};
+    ret.date = _dateString;
+    ret.mediatype = "error";
+    ret.title = "API Error";
+    ret.explanation =
+      "NASA'S API generated an error. Try viewing the original webpage on their website.";
+    var errorStyle = {
+      position: "absolute",
+      color: "#ddd",
+      width: "100vw",
+      transform: "translate(-50%, -50%)",
+      textAlign: "center",
+    };
+    ret.reactElement = (
+      <div style={errorStyle} className="api-error-element">
+        Error retrieving {ret.date}.<br />
+        This is likely a problem with NASA's API and I can't fix it.
+      </div>
+    );
+    dataCache.set(ret.date, ret);
+    callOnFail(ret);
+  }
 
-	/*
+  /*
 	Preload an asset, doing nothing with the returned data
 	except for adding it to dataCache.
 	@param {Date} string - The Date to preload data for
 	@param {function} onSuccess - Callback for successful API retrieval
 	@param {function} [onFail] - Callback for failure
 	*/
-	this.preload = function(_date, onSuccess, onFail){
-		this.get(_date, function(d){
-			// preload by creating image element (only if mediatype is an image, not video)
-			if(d.mediatype === "image"){
-				var img = document.createElement("img");
-				var url = d.sdurl.replace("http://", "https://");
-				img.src = url;
-			}
-		}, onFail);
-	}
+  this.preload = function (_date, onSuccess, onFail) {
+    this.get(
+      _date,
+      function (d) {
+        // preload by creating image element (only if mediatype is an image, not video)
+        if (d.mediatype === "image") {
+          var img = document.createElement("img");
+          var url = d.sdurl.replace("http://", "https://");
+          img.src = url;
+        }
+      },
+      onFail
+    );
+  };
 
-	this.getCacheSize = function() {
-		return dataCache.size;
-	}
-}
+  this.getCacheSize = function () {
+    return dataCache.size;
+  };
+};
 
 module.exports = APOD;

@@ -74,6 +74,7 @@ const DayPicker = (props) => {
           padding: 5,
           // A reset of styles, including removing the default dropdown arrow
           appearance: "none",
+          WebkitAppearance: "none",
           // Additional resets for further consistency
           width: "100%",
           fontFamily: "inherit",

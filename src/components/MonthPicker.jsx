@@ -50,6 +50,7 @@ const MonthPicker = (props) => {
         padding: 5,
         // A reset of styles, including removing the default dropdown arrow
         appearance: "none",
+        webkitAppearance: "none",
         // Additional resets for further consistency
         margin: 0,
         width: "100%",
