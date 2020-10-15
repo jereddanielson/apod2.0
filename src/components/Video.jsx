@@ -29,7 +29,7 @@ class Video extends React.Component {
     boxShadow: "0 0 100px #404448",
   };
   render = () => {
-    var vidsrc = this.props.vidsrc.replace("http://", "https://");
+    var vidsrc = this.props.vidsrc?.replace("http://", "https://");
     return (
       <iframe
         style={this.iframeStyle}
