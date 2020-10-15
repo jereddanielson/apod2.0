@@ -27,7 +27,6 @@ import Moment from "moment";
 
 import APOD from "./modules/APOD.jsx";
 
-import Menu from "./components/Menu.jsx";
 import SideBar from "./components/SideBar.jsx";
 import ContentBox from "./components/ContentBox.jsx";
 import FilmStrip from "./components/FilmStrip.jsx";
@@ -104,7 +103,6 @@ class APP extends React.Component {
         }}
         style={this.style}
       >
-        <Menu />
         {this.state.initialImageLoaded ? (
           <SideBar
             data={this.state.data}

@@ -20,6 +20,21 @@
 
 import React from "react";
 
+var datesArray = [
+  { num: 1, name: "January" },
+  { num: 2, name: "February" },
+  { num: 3, name: "March" },
+  { num: 4, name: "April" },
+  { num: 5, name: "May" },
+  { num: 6, name: "June" },
+  { num: 7, name: "July" },
+  { num: 8, name: "August" },
+  { num: 9, name: "September" },
+  { num: 10, name: "October" },
+  { num: 11, name: "November" },
+  { num: 12, name: "December" },
+];
+
 class MonthPicker extends React.Component {
   state = { isOpen: false };
   componentDidMount = () => {
@@ -38,70 +53,45 @@ class MonthPicker extends React.Component {
     }
   };
   handleClick = (e) => {
-    this.setState({ isOpen: true });
+    this.ref.click();
   };
   handlePicked = (e) => {
-    this.setState({ isOpen: false });
     this.props.setNewDate(this.props.curDateMoment.clone().month(e - 1));
   };
   render = () => {
-    var datesArray = [
-      { num: 1, name: "January" },
-      { num: 2, name: "February" },
-      { num: 3, name: "March" },
-      { num: 4, name: "April" },
-      { num: 5, name: "May" },
-      { num: 6, name: "June" },
-      { num: 7, name: "July" },
-      { num: 8, name: "August" },
-      { num: 9, name: "September" },
-      { num: 10, name: "October" },
-      { num: 11, name: "November" },
-      { num: 12, name: "December" },
-    ];
-    var self = this;
     return (
-      <div
-        id="datebox-month"
-        className={
-          "datebox-component " + (this.state.isOpen ? "picker-is-open" : "")
-        }
-        style={{ fontSize: "18px", padding: "5px" }}
+      <select
+        id="month-picker-num"
+        className="datebox-component month-picker"
+        onClick={this.handleClick}
+        value={datesArray.find((ea) => ea.name === this.props.curMonth).num}
+        style={{
+          fontSize: 18,
+          padding: 5,
+          // A reset of styles, including removing the default dropdown arrow
+          appearance: "none",
+          // Additional resets for further consistency
+          margin: 0,
+          width: "100%",
+          fontFamily: "inherit",
+          lineHeight: "inherit",
+          color: "inherit",
+        }}
+        ref={(r) => {
+          this.ref = r;
+        }}
+        onChange={(e) => {
+          this.handlePicked(e.target.value);
+        }}
       >
-        <div className="month-picker">
-          <div id="month-picker-num" onClick={this.handleClick}>
-            {this.props.curMonth}
-          </div>
-          {(() => {
-            if (this.state.isOpen) {
-              return (
-                <div id="month-picker-inner-id" className="month-picker-inner">
-                  {datesArray.map(function (e) {
-                    return (
-                      <div
-                        className={
-                          "month-picker-month picker-element " +
-                          (e.name === self.props.curMonth
-                            ? "selected-picker-element"
-                            : "")
-                        }
-                        onClick={function () {
-                          self.handlePicked(e.num);
-                        }}
-                        key={"month-picker-" + e.num}
-                      >
-                        {e.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            } else {
-              return undefined;
-            }
-          })()}
-        </div>
-      </div>
+        {datesArray.map((ea) => {
+          return (
+            <option value={ea.num} key={ea.name}>
+              {ea.name}
+            </option>
+          );
+        })}
+      </select>
     );
   };
 }
