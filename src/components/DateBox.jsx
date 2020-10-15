@@ -18,31 +18,47 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react"
-import DayPicker from "./DayPicker.jsx"
-import MonthPicker from "./MonthPicker.jsx"
-import YearPicker from "./YearPicker.jsx"
+import React from "react";
+import DayPicker from "./DayPicker.jsx";
+import MonthPicker from "./MonthPicker.jsx";
+import YearPicker from "./YearPicker.jsx";
 
-var DateBox = React.createClass({
-	style: {
-		display: "block",
-		position: "absolute",
-		left: "10px",
-		top: 0,
-		fontFamily: "'Roboto Slab', monospace",
-		zIndex: 100
-	},
-	render() {
-		return (
-			<div id="datebox" style={this.style} >
-				<DayPicker curDay={this.props.curDate ? this.props.curDate.date() : ""} daysInCurMonth={this.props.curDate ? this.props.curDate.clone().endOf("month").date() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
-				<div style={{display: "inline-block", marginLeft: "5px"}}>
-					<MonthPicker curMonth={this.props.curDate ? this.props.curDate.clone().format("MMMM").toString() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
-					<YearPicker curYear={this.props.curDate ? this.props.curDate.year() : ""} curDateMoment={this.props.curDate} setNewDate={this.props.setNewDate} />
-				</div>
-			</div>
-		);
-	}
-});
+const DateBox = (props) => {
+  const style = {
+    display: "block",
+    position: "absolute",
+    left: "10px",
+    top: 0,
+    fontFamily: "'Roboto Slab', monospace",
+    zIndex: 100,
+  };
+
+  return (
+    <div id="datebox" style={style}>
+      <DayPicker
+        curDay={props.curDate ? props.curDate.date() : ""}
+        daysInCurMonth={
+          props.curDate ? props.curDate.clone().endOf("month").date() : ""
+        }
+        curDateMoment={props.curDate}
+        setNewDate={props.setNewDate}
+      />
+      <div style={{ display: "inline-block", marginLeft: "5px" }}>
+        <MonthPicker
+          curMonth={
+            props.curDate ? props.curDate.clone().format("MMMM").toString() : ""
+          }
+          curDateMoment={props.curDate}
+          setNewDate={props.setNewDate}
+        />
+        <YearPicker
+          curYear={props.curDate ? props.curDate.year() : ""}
+          curDateMoment={props.curDate}
+          setNewDate={props.setNewDate}
+        />
+      </div>
+    </div>
+  );
+};
 
 module.exports = DateBox;

@@ -18,22 +18,55 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react"
+import React from "react";
 
-var Info = React.createClass({
-	render() {
-		return (
-			<div id="info-container">
-				<span style={{marginRight: 20}} className="icon-info" />
-				<div id="info-inner">
-					<p><a href="">APOD 2.0</a> is an open source project created to enhance the experience of viewing <a href="http://apod.nasa.gov" target="_blank">NASA's Astronomy Pictures of the Day.</a></p>
-					<p>Feedback is appreciated. If you see anything you'd like improved, please <a href="mailto:jereddanielson@gmail.com" target="_blank">email me.</a></p>
-					<p>Website &#169; <a href="http://jered.io" target="_blank">Jered Danielson</a> 2016, <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU GPL 3.0</a></p>
-					<p style={{fontSize: 24}}><a href="http://github.com/jereddanielson" target="_blank" style={{marginRight: 12}}><span className="icon-github" /></a><a href="mailto:jereddanielson@gmail.com" target="_blank"><span className="icon-mail4" /></a></p>
-				</div>
-			</div>
-		);
-	}
-});
+const Info = () => {
+  return (
+    <div id="info-container">
+      <span style={{ marginRight: 20 }} className="icon-info" />
+      <div id="info-inner">
+        <p>
+          <a href="">APOD 2.0</a> is an open source project created to enhance
+          the experience of viewing{" "}
+          <a href="http://apod.nasa.gov" target="_blank">
+            NASA's Astronomy Pictures of the Day.
+          </a>
+        </p>
+        <p>
+          Feedback is appreciated. If you see anything you'd like improved,
+          please{" "}
+          <a href="mailto:jereddanielson@gmail.com" target="_blank">
+            email me.
+          </a>
+        </p>
+        <p>
+          Website &#169;{" "}
+          <a href="http://jered.io" target="_blank">
+            Jered Danielson
+          </a>{" "}
+          2016,{" "}
+          <a
+            href="https://www.gnu.org/licenses/gpl-3.0.en.html"
+            target="_blank"
+          >
+            GNU GPL 3.0
+          </a>
+        </p>
+        <p style={{ fontSize: 24 }}>
+          <a
+            href="http://github.com/jereddanielson"
+            target="_blank"
+            style={{ marginRight: 12 }}
+          >
+            <span className="icon-github" />
+          </a>
+          <a href="mailto:jereddanielson@gmail.com" target="_blank">
+            <span className="icon-mail4" />
+          </a>
+        </p>
+      </div>
+    </div>
+  );
+};
 
 module.exports = Info;

@@ -18,22 +18,29 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react"
+import React from "react";
 
-var Video = React.createClass({
-	iframeStyle: {
-		width: "960px",
-		height: "540px",
-		position: "absolute",
-		transform: "translate(-50%, -50%)",
-		boxShadow: "0 0 100px #404448"
-	},
-	render() {
-		var vidsrc = this.props.vidsrc.replace("http://", "https://");
-		return (
-			<iframe style={this.iframeStyle} src={vidsrc} frameBorder={0} allowFullScreen alt={this.props.alt} title={this.props.title} />
-		);
-	}
-});
+class Video extends React.Component {
+  iframeStyle = {
+    width: "960px",
+    height: "540px",
+    position: "absolute",
+    transform: "translate(-50%, -50%)",
+    boxShadow: "0 0 100px #404448",
+  };
+  render = () => {
+    var vidsrc = this.props.vidsrc.replace("http://", "https://");
+    return (
+      <iframe
+        style={this.iframeStyle}
+        src={vidsrc}
+        frameBorder={0}
+        allowFullScreen
+        alt={this.props.alt}
+        title={this.props.title}
+      />
+    );
+  };
+}
 
 module.exports = Video;

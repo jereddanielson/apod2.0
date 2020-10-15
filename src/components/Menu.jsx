@@ -18,17 +18,13 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react"
+import React from "react";
 
-var Menu = React.createClass({
-	style: {
-		position: "absolute"
-	},
-	render() {
-		return (
-			<div id="menu" style={this.style}></div>
-		);
-	}
-});
+const Menu = () => {
+  const style = {
+    position: "absolute",
+  };
+  return <div id="menu" style={style}></div>;
+};
 
 module.exports = Menu;

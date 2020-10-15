@@ -18,68 +18,82 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react"
-import DateBox from "./DateBox.jsx"
+import React from "react";
+import DateBox from "./DateBox.jsx";
 
-var Moment = require("moment");
-
-var SideBar = React.createClass({
-	style: {
-		color: "#ccc",
-		position: "absolute",
-		width: "100%",
-		left: "0",
-		top: "0"
-	},
-	titleStyle: {
-		fontFamily: "'Roboto Slab', monospace",
-		padding: "0 20px",
-		margin: 0,
-		lineHeight: "80px",
-		height: "80px",
-		overflow: "hidden",
-		textOverflow: "ellipsis",
-		whiteSpace: "nowrap",
-		left: "50%",
-		transform: "translateX(-50%)",
-		position: "absolute"
-	},
-	explanationStyle: {
-		fontSize: "16px",
-		letterSpacing: ".05em",
-		padding: "20px",
-		top: "60px",
-		width: "720px",
-		margin: "0 auto",
-		position: "relative",
-		zIndex: 20,
-		maxWidth: "100vw",
-		boxSizing: "border-box"
-	},
-	pStyle: {
-		color: "#aaa",
-		fontFamily: "Roboto Slab, serif",
-		fontWeight: 300
-	},
-	render() {
-		return (
-			<div id="sidebar" style={this.style}>
-				<DateBox curDate={this.props.currentDate} setNewDate={this.props.setNewDate} />
-				<div id="sidebar-title" style={this.titleStyle}>{this.props.data.title}</div>
-				<div id="sidebar-explanation" style={this.explanationStyle}>
-					<div>{this.props.data.explanation}</div>
-					<div className="sidebar-sourceinfo">
-						<a target="_blank" href={"http://apod.nasa.gov/apod/ap" + this.props.currentDate.clone().format("YYMMDD").toString() + ".html"}>Source</a>
-						{(() => {if(this.props.data.copyright){
-							return " | Image \u00A9 " + this.props.data.copyright;
-						} else {
-							return undefined;
-						}})()}
-					</div>
-				</div>
-			</div>
-		);
-	}
-});
+class SideBar extends React.Component {
+  style = {
+    color: "#ccc",
+    position: "absolute",
+    width: "100%",
+    left: "0",
+    top: "0",
+  };
+  titleStyle = {
+    fontFamily: "'Roboto Slab', monospace",
+    padding: "0 20px",
+    margin: 0,
+    lineHeight: "80px",
+    height: "80px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    left: "50%",
+    transform: "translateX(-50%)",
+    position: "absolute",
+  };
+  explanationStyle = {
+    fontSize: "16px",
+    letterSpacing: ".05em",
+    padding: "20px",
+    top: "60px",
+    width: "720px",
+    margin: "0 auto",
+    position: "relative",
+    zIndex: 20,
+    maxWidth: "100vw",
+    boxSizing: "border-box",
+  };
+  pStyle = {
+    color: "#aaa",
+    fontFamily: "Roboto Slab, serif",
+    fontWeight: 300,
+  };
+  render = () => {
+    return (
+      <div id="sidebar" style={this.style}>
+        <DateBox
+          curDate={this.props.currentDate}
+          setNewDate={this.props.setNewDate}
+        />
+        <div id="sidebar-title" style={this.titleStyle}>
+          {this.props.data.title}
+        </div>
+        <div id="sidebar-explanation" style={this.explanationStyle}>
+          <div>{this.props.data.explanation}</div>
+          <div className="sidebar-sourceinfo">
+            <a
+              target="_blank"
+              href={
+                "http://apod.nasa.gov/apod/ap" +
+                this.props.currentDate.clone().format("YYMMDD").toString() +
+                ".html"
+              }
+            >
+              Source
+            </a>
+            {(() => {
+              if (this.props.data.copyright) {
+                return " | Image \u00A9 " + this.props.data.copyright;
+              } else {
+                return undefined;
+              }
+            })()}
+          </div>
+        </div>
+      </div>
+    );
+  };
+}
 
 module.exports = SideBar;

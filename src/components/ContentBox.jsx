@@ -18,23 +18,22 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import React from "react"
+import React from "react";
 
-var ContentBox = React.createClass({
-	style: {
-		right: "50%",
-		top: "50%",
-		transform: "translate(-50%, -50%)",
-		background: "rgba(255, 100, 100, .1)",
-		position: "absolute"
-	},
-	render() {
-		return (
-			<div id="contentbox" style={this.style} onClick={this.props.toggleHiRes}>
-				{this.props.children}
-			</div>
-		);
-	}
-});
+const ContentBox = (props) => {
+  const style = {
+    right: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    background: "rgba(255, 100, 100, .1)",
+    position: "absolute",
+  };
+
+  return (
+    <div id="contentbox" style={style} onClick={props.toggleHiRes}>
+      {props.children}
+    </div>
+  );
+};
 
 module.exports = ContentBox;
