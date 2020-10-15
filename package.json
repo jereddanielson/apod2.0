@@ -17,6 +17,7 @@
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
+    "focus-trap-react": "^8.1.0",
     "gsap": "^3.5.1",
     "jquery": "^3.5.1",
     "moment": "^2.29.1",

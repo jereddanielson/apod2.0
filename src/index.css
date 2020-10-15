@@ -389,4 +389,8 @@ a:hover {
   }
 }
 
+.contentbox:focus {
+  outline: 1px solid blue;
+}
+
 /* End document styles */

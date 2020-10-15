@@ -30,9 +30,18 @@ const ContentBox = (props) => {
   };
 
   return (
-    <div id="contentbox" style={style} onClick={props.toggleHiRes}>
+    <a
+      className="contentbox"
+      style={style}
+      href="#"
+      title="Open hi resolution image"
+      onClick={(e) => {
+        e.preventDefault();
+        props.toggleHiRes(e);
+      }}
+    >
       {props.children}
-    </div>
+    </a>
   );
 };
 

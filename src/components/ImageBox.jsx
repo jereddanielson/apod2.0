@@ -19,6 +19,7 @@
 */
 
 import React from "react";
+import FocusTrap from "focus-trap-react";
 
 const ContentBox = (props) => {
   const style = {
@@ -30,9 +31,20 @@ const ContentBox = (props) => {
     position: "absolute",
   };
   return (
-    <div id="contentbox" style={style} onClick={props.toggleHiRes}>
-      {props.children}
-    </div>
+    <FocusTrap>
+      <a
+        className="contentbox"
+        style={style}
+        href="#"
+        title="Close hi resolution image"
+        onClick={(e) => {
+          e.preventDefault();
+          props.toggleHiRes(e);
+        }}
+      >
+        {props.children}
+      </a>
+    </FocusTrap>
   );
 };
 
