@@ -20,81 +20,79 @@
 
 import React from "react";
 
-class DayPicker extends React.Component {
-  handlePicked = (e) => {
-    this.props.setNewDate(this.props.curDateMoment.clone().date(e));
+const DayPicker = (props) => {
+  const handlePicked = (e) => {
+    props.setNewDate(props.curDateMoment.clone().date(e));
   };
-  render = () => {
-    var datesArray = [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
-      25,
-      26,
-      27,
-      28,
-    ];
-    for (var i = 28; i < this.props.daysInCurMonth; i++) {
-      datesArray.push(i + 1);
-    }
-    return (
-      <div style={{ flexShrink: 1 }}>
-        <select
-          id="day-picker-num"
-          className="datebox-component day-picker"
-          onClick={this.handleClick}
-          value={this.props.curDay}
-          style={{
-            fontSize: 64,
-            display: "inline-block",
-            textAlign: "center",
-            padding: 5,
-            margin: "5px 0",
-            lineHeight: "64px",
-            padding: 5,
-            // A reset of styles, including removing the default dropdown arrow
-            appearance: "none",
-            // Additional resets for further consistency
-            width: "100%",
-            fontFamily: "inherit",
-            color: "inherit",
-          }}
-          onChange={(e) => {
-            this.handlePicked(e.target.value);
-          }}
-        >
-          {datesArray.map((ea) => {
-            return (
-              <option value={ea} key={ea}>
-                {ea}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    );
-  };
-}
+
+  var datesArray = [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+  ];
+  for (var i = 28; i < props.daysInCurMonth; i++) {
+    datesArray.push(i + 1);
+  }
+  return (
+    <div style={{ flexShrink: 1 }}>
+      <select
+        id="day-picker-num"
+        className="datebox-component day-picker"
+        value={props.curDay}
+        style={{
+          fontSize: 64,
+          display: "inline-block",
+          textAlign: "center",
+          padding: 5,
+          margin: "5px 0",
+          lineHeight: "64px",
+          padding: 5,
+          // A reset of styles, including removing the default dropdown arrow
+          appearance: "none",
+          // Additional resets for further consistency
+          width: "100%",
+          fontFamily: "inherit",
+          color: "inherit",
+        }}
+        onChange={(e) => {
+          handlePicked(e.target.value);
+        }}
+      >
+        {datesArray.map((ea) => {
+          return (
+            <option value={ea} key={ea}>
+              {ea}
+            </option>
+          );
+        })}
+      </select>
+    </div>
+  );
+};
 
 module.exports = DayPicker;

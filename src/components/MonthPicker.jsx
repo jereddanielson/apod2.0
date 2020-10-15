@@ -35,43 +35,41 @@ var datesArray = [
   { num: 12, name: "December" },
 ];
 
-class MonthPicker extends React.Component {
-  handlePicked = (e) => {
-    this.props.setNewDate(this.props.curDateMoment.clone().month(e - 1));
+const MonthPicker = (props) => {
+  const handlePicked = (e) => {
+    props.setNewDate(props.curDateMoment.clone().month(e - 1));
   };
-  render = () => {
-    return (
-      <select
-        id="month-picker-num"
-        className="datebox-component month-picker"
-        onClick={this.handleClick}
-        value={datesArray.find((ea) => ea.name === this.props.curMonth).num}
-        style={{
-          fontSize: 18,
-          padding: 5,
-          // A reset of styles, including removing the default dropdown arrow
-          appearance: "none",
-          // Additional resets for further consistency
-          margin: 0,
-          width: "100%",
-          fontFamily: "inherit",
-          lineHeight: "inherit",
-          color: "inherit",
-        }}
-        onChange={(e) => {
-          this.handlePicked(e.target.value);
-        }}
-      >
-        {datesArray.map((ea) => {
-          return (
-            <option value={ea.num} key={ea.name}>
-              {ea.name}
-            </option>
-          );
-        })}
-      </select>
-    );
-  };
-}
+
+  return (
+    <select
+      id="month-picker-num"
+      className="datebox-component month-picker"
+      value={datesArray.find((ea) => ea.name === props.curMonth).num}
+      style={{
+        fontSize: 18,
+        padding: 5,
+        // A reset of styles, including removing the default dropdown arrow
+        appearance: "none",
+        // Additional resets for further consistency
+        margin: 0,
+        width: "100%",
+        fontFamily: "inherit",
+        lineHeight: "inherit",
+        color: "inherit",
+      }}
+      onChange={(e) => {
+        handlePicked(e.target.value);
+      }}
+    >
+      {datesArray.map((ea) => {
+        return (
+          <option value={ea.num} key={ea.name}>
+            {ea.name}
+          </option>
+        );
+      })}
+    </select>
+  );
+};
 
 module.exports = MonthPicker;

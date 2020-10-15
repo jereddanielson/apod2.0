@@ -26,80 +26,41 @@ for (let i = 1995; i <= currentYear; i++) {
   theDates.push(i);
 }
 
-class YearPicker extends React.Component {
-  state = {
-    isOpen: false,
-    datesArray: theDates,
+const YearPicker = (props) => {
+  const handlePicked = (e) => {
+    props.setNewDate(props.curDateMoment.clone().year(e));
   };
-  componentDidMount = () => {
-    document.addEventListener("click", this.handleCancelClick);
-  };
-  componentWillUnmount = () => {
-    document.removeEventListener("click", this.handleCancelClick);
-  };
-  handleCancelClick = (e) => {
-    if (
-      this.state.isOpen &&
-      e.target.id !== "year-picker-inner-id" &&
-      e.target.id !== "year-picker-num"
-    ) {
-      this.setState({ isOpen: false });
-    }
-  };
-  handleClick = (e) => {
-    this.setState({ isOpen: true });
-  };
-  handlePicked = (e) => {
-    this.setState({ isOpen: false });
-    this.props.setNewDate(this.props.curDateMoment.clone().year(e));
-  };
-  render = () => {
-    var datesArray = this.state.datesArray;
-    var self = this;
-    return (
-      <div
-        id="datebox-year"
-        className={
-          "datebox-component " + (this.state.isOpen ? "picker-is-open" : "")
-        }
-        style={{ fontSize: "18px", padding: "5px", display: "inline-block" }}
-      >
-        <div className="year-picker">
-          <div id="year-picker-num" onClick={this.handleClick}>
-            {this.props.curYear}
-          </div>
-          {(() => {
-            if (this.state.isOpen) {
-              return (
-                <div id="year-picker-inner-id" className="year-picker-inner">
-                  {datesArray.map(function (e) {
-                    return (
-                      <div
-                        className={
-                          "year-picker-year picker-element " +
-                          (e === self.props.curYear
-                            ? "selected-picker-element"
-                            : "")
-                        }
-                        onClick={function () {
-                          self.handlePicked(e);
-                        }}
-                        key={"year-picker-" + e}
-                      >
-                        {e}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            } else {
-              return undefined;
-            }
-          })()}
-        </div>
-      </div>
-    );
-  };
-}
+
+  return (
+    <select
+      id="year-picker-num"
+      className="datebox-component year-picker"
+      value={props.curYear}
+      style={{
+        fontSize: 18,
+        padding: 5,
+        // A reset of styles, including removing the default dropdown arrow
+        appearance: "none",
+        // Additional resets for further consistency
+        margin: 0,
+        width: "100%",
+        fontFamily: "inherit",
+        lineHeight: "inherit",
+        color: "inherit",
+      }}
+      onChange={(e) => {
+        handlePicked(e.target.value);
+      }}
+    >
+      {theDates.map((ea) => {
+        return (
+          <option value={ea} key={ea}>
+            {ea}
+          </option>
+        );
+      })}
+    </select>
+  );
+};
 
 module.exports = YearPicker;
