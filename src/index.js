@@ -38,7 +38,6 @@ class APP extends React.Component {
   style = {
     position: "absolute",
     width: "100vw",
-    height: "100vh",
     background: "#000408",
     overflow: "hidden",
   };
@@ -82,6 +81,9 @@ class APP extends React.Component {
     this.loadInitialImage();
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
+
+    window.addEventListener("resize", this.measureVH);
+    this.measureVH();
   };
   componentWillUnmount = () => {
     document.removeEventListener("keydown", this.handleKeyDown);
@@ -89,6 +91,10 @@ class APP extends React.Component {
   };
   handleResize = () => {
     this.setState({ clientWidth: ReactDOM.findDOMNode(this).clientWidth });
+  };
+  measureVH = () => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
   };
   render = () => {
     return (
