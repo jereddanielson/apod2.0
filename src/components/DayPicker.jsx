@@ -21,27 +21,7 @@
 import React from "react";
 
 class DayPicker extends React.Component {
-  state = { isOpen: false };
-  componentDidMount = () => {
-    document.addEventListener("click", this.handleCancelClick);
-  };
-  componentWillUnmount = () => {
-    document.removeEventListener("click", this.handleCancelClick);
-  };
-  handleCancelClick = (e) => {
-    if (
-      this.state.isOpen &&
-      e.target.id !== "day-picker-inner-id" &&
-      e.target.id !== "day-picker-num"
-    ) {
-      this.setState({ isOpen: false });
-    }
-  };
-  handleClick = (e) => {
-    this.setState({ isOpen: true });
-  };
   handlePicked = (e) => {
-    this.setState({ isOpen: false });
     this.props.setNewDate(this.props.curDateMoment.clone().date(e));
   };
   render = () => {
@@ -78,55 +58,40 @@ class DayPicker extends React.Component {
     for (var i = 28; i < this.props.daysInCurMonth; i++) {
       datesArray.push(i + 1);
     }
-    var self = this;
     return (
-      <div
-        id="datebox-day"
-        className={
-          "datebox-component " + (this.state.isOpen ? "picker-is-open" : "")
-        }
-        style={{
-          fontSize: "64px",
-          display: "inline-block",
-          textAlign: "center",
-          padding: "5px",
-          margin: "5px 0",
-          lineHeight: "64px",
-        }}
-      >
-        <div className="day-picker">
-          <div id="day-picker-num" onClick={this.handleClick}>
-            {this.props.curDay}
-          </div>
-          {(() => {
-            if (this.state.isOpen) {
-              return (
-                <div id="day-picker-inner-id" className="day-picker-inner">
-                  {datesArray.map(function (e) {
-                    return (
-                      <div
-                        className={
-                          "day-picker-day picker-element " +
-                          (e === self.props.curDay
-                            ? "selected-picker-element"
-                            : "")
-                        }
-                        onClick={function () {
-                          self.handlePicked(e);
-                        }}
-                        key={"day-picker-" + e}
-                      >
-                        {e}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            } else {
-              return undefined;
-            }
-          })()}
-        </div>
+      <div style={{ flexShrink: 1 }}>
+        <select
+          id="day-picker-num"
+          className="datebox-component day-picker"
+          onClick={this.handleClick}
+          value={this.props.curDay}
+          style={{
+            fontSize: 64,
+            display: "inline-block",
+            textAlign: "center",
+            padding: 5,
+            margin: "5px 0",
+            lineHeight: "64px",
+            padding: 5,
+            // A reset of styles, including removing the default dropdown arrow
+            appearance: "none",
+            // Additional resets for further consistency
+            width: "100%",
+            fontFamily: "inherit",
+            color: "inherit",
+          }}
+          onChange={(e) => {
+            this.handlePicked(e.target.value);
+          }}
+        >
+          {datesArray.map((ea) => {
+            return (
+              <option value={ea} key={ea}>
+                {ea}
+              </option>
+            );
+          })}
+        </select>
       </div>
     );
   };

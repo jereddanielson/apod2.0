@@ -31,6 +31,7 @@ const DateBox = (props) => {
     top: 0,
     fontFamily: "'Roboto Slab', monospace",
     zIndex: 100,
+    display: "flex",
   };
 
   return (
@@ -43,7 +44,15 @@ const DateBox = (props) => {
         curDateMoment={props.curDate}
         setNewDate={props.setNewDate}
       />
-      <div style={{ display: "inline-block", marginLeft: "5px" }}>
+      <div
+        style={{
+          display: "inline-block",
+          marginLeft: "5px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
         <MonthPicker
           curMonth={
             props.curDate ? props.curDate.clone().format("MMMM").toString() : ""

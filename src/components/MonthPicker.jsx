@@ -36,25 +36,6 @@ var datesArray = [
 ];
 
 class MonthPicker extends React.Component {
-  state = { isOpen: false };
-  componentDidMount = () => {
-    document.addEventListener("click", this.handleCancelClick);
-  };
-  componentWillUnmount = () => {
-    document.removeEventListener("click", this.handleCancelClick);
-  };
-  handleCancelClick = (e) => {
-    if (
-      this.state.isOpen &&
-      e.target.id !== "month-picker-inner-id" &&
-      e.target.id !== "month-picker-num"
-    ) {
-      this.setState({ isOpen: false });
-    }
-  };
-  handleClick = (e) => {
-    this.ref.click();
-  };
   handlePicked = (e) => {
     this.props.setNewDate(this.props.curDateMoment.clone().month(e - 1));
   };
@@ -76,9 +57,6 @@ class MonthPicker extends React.Component {
           fontFamily: "inherit",
           lineHeight: "inherit",
           color: "inherit",
-        }}
-        ref={(r) => {
-          this.ref = r;
         }}
         onChange={(e) => {
           this.handlePicked(e.target.value);
