@@ -20,30 +20,28 @@
 
 import React from "react"
 
-var Moment = require("moment");
+import Moment from "moment"
 
-var DayPicker = React.createClass({
-	getInitialState() {
-		return {isOpen: false};
-	},
-	componentWillMount() {
+export default class DayPicker extends React.Component {
+	state = {isOpen: false};
+	componentDidMount() {
 		document.addEventListener("click", this.handleCancelClick);
-	},
+	}
 	componentWillUnmount() {
 		document.removeEventListener("click", this.handleCancelClick);
-	},
-	handleCancelClick(e) {
+	}
+	handleCancelClick = (e) => {
 		if(this.state.isOpen && e.target.id !== "day-picker-inner-id" && e.target.id !== "day-picker-num"){
 			this.setState({isOpen: false});
 		}
-	},
-	handleClick(e) {
+	};
+	handleClick = (e) => {
 		this.setState({isOpen: true});
-	},
-	handlePicked(e){
+	};
+	handlePicked = (e) => {
 		this.setState({isOpen: false});
 		this.props.setNewDate(this.props.curDateMoment.clone().date(e));
-	},
+	};
 	render() {
 		var datesArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28];
 		for(var i = 28; i < this.props.daysInCurMonth; i++){
@@ -68,6 +66,4 @@ var DayPicker = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = DayPicker;
+}

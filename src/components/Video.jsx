@@ -20,20 +20,18 @@
 
 import React from "react"
 
-var Video = React.createClass({
-	iframeStyle: {
+export default class Video extends React.Component {
+	iframeStyle = {
 		width: "960px",
 		height: "540px",
 		position: "absolute",
 		transform: "translate(-50%, -50%)",
 		boxShadow: "0 0 100px #404448"
-	},
+	};
 	render() {
 		var vidsrc = this.props.vidsrc.replace("http://", "https://");
 		return (
 			<iframe style={this.iframeStyle} src={vidsrc} frameBorder={0} allowFullScreen alt={this.props.alt} title={this.props.title} />
 		);
 	}
-});
-
-module.exports = Video;
+}

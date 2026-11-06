@@ -20,7 +20,7 @@
 
 import React from "react"
 
-var Info = React.createClass({
+export default class Info extends React.Component {
 	render() {
 		return (
 			<div id="info-container">
@@ -34,6 +34,4 @@ var Info = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = Info;
+}

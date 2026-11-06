@@ -20,30 +20,28 @@
 
 import React from "react"
 
-var Moment = require("moment");
+import Moment from "moment"
 
-var MonthPicker = React.createClass({
-	getInitialState() {
-		return {isOpen: false};
-	},
-	componentWillMount() {
+export default class MonthPicker extends React.Component {
+	state = {isOpen: false};
+	componentDidMount() {
 		document.addEventListener("click", this.handleCancelClick);
-	},
+	}
 	componentWillUnmount() {
 		document.removeEventListener("click", this.handleCancelClick);
-	},
-	handleCancelClick(e) {
+	}
+	handleCancelClick = (e) => {
 		if(this.state.isOpen && e.target.id !== "month-picker-inner-id" && e.target.id !== "month-picker-num"){
 			this.setState({isOpen: false});
 		}
-	},
-	handleClick(e) {
+	};
+	handleClick = (e) => {
 		this.setState({isOpen: true});
-	},
-	handlePicked(e){
+	};
+	handlePicked = (e) => {
 		this.setState({isOpen: false});
 		this.props.setNewDate(this.props.curDateMoment.clone().month(e - 1));
-	},
+	};
 	render() {
 		var datesArray = [{num: 1, name: "January"}, {num: 2, name: "February"}, {num: 3, name: "March"}, {num: 4, name: "April"}, {num: 5, name: "May"}, {num: 6, name: "June"}, {num: 7, name: "July"}, {num: 8, name: "August"}, {num: 9, name: "September"}, {num: 10, name: "October"}, {num: 11, name: "November"}, {num: 12, name: "December"}, ];
 		var self = this;
@@ -64,6 +62,4 @@ var MonthPicker = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = MonthPicker;
+}

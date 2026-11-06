@@ -23,15 +23,15 @@ import DayPicker from "./DayPicker.jsx"
 import MonthPicker from "./MonthPicker.jsx"
 import YearPicker from "./YearPicker.jsx"
 
-var DateBox = React.createClass({
-	style: {
+export default class DateBox extends React.Component {
+	style = {
 		display: "block",
 		position: "absolute",
 		left: "10px",
 		top: 0,
 		fontFamily: "'Roboto Slab', monospace",
 		zIndex: 100
-	},
+	};
 	render() {
 		return (
 			<div id="datebox" style={this.style} >
@@ -43,6 +43,4 @@ var DateBox = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = DateBox;
+}

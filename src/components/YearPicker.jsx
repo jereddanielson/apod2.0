@@ -20,35 +20,36 @@
 
 import React from "react"
 
-var Moment = require("moment");
+import Moment from "moment"
 
-var YearPicker = React.createClass({
-	getInitialState() {
+export default class YearPicker extends React.Component {
+	constructor(props) {
+		super(props);
 		let theDates = [];
 		let currentYear = new Date().getFullYear();
 		for(let i = 1995; i <= currentYear; i++){
 			theDates.push(i);
 		}
-		return {isOpen: false, datesArray: theDates};
-	},
-	componentWillMount() {
+		this.state = {isOpen: false, datesArray: theDates};
+	}
+	componentDidMount() {
 		document.addEventListener("click", this.handleCancelClick);
-	},
+	}
 	componentWillUnmount() {
 		document.removeEventListener("click", this.handleCancelClick);
-	},
-	handleCancelClick(e) {
+	}
+	handleCancelClick = (e) => {
 		if(this.state.isOpen && e.target.id !== "year-picker-inner-id" && e.target.id !== "year-picker-num"){
 			this.setState({isOpen: false});
 		}
-	},
-	handleClick(e) {
+	};
+	handleClick = (e) => {
 		this.setState({isOpen: true});
-	},
-	handlePicked(e){
+	};
+	handlePicked = (e) => {
 		this.setState({isOpen: false});
 		this.props.setNewDate(this.props.curDateMoment.clone().year(e));
-	},
+	};
 	render() {
 		var datesArray = this.state.datesArray;
 		var self = this;
@@ -69,6 +70,4 @@ var YearPicker = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = YearPicker;
+}

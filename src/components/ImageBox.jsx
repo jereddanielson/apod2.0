@@ -20,15 +20,15 @@
 
 import React from "react"
 
-var ContentBox = React.createClass({
-	style: {
+export default class ContentBox extends React.Component {
+	style = {
 		margin: "0 auto",
 		right: "20px",
 		top: "calc(50% - 30px)",
 		transform: "translate(-50%, -50%) scale(1)",
 		background: "rgba(255, 100, 100, .1)",
 		position: "absolute"
-	},
+	};
 	render() {
 		return (
 			<div id="contentbox" style={this.style} onClick={this.props.toggleHiRes}>
@@ -36,6 +36,4 @@ var ContentBox = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = ContentBox;
+}

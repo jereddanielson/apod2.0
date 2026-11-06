@@ -34,12 +34,10 @@
 
 import React from "react"
 
-var Moment = require("moment");
-
 import $ from "jquery"
 
-import Image from "../Components/Image.jsx"
-import Video from "../Components/Video.jsx"
+import Image from "../components/Image.jsx"
+import Video from "../components/Video.jsx"
 
 var APOD = function(){
 	var _KEY = "mwTWt97WoV91jHjbgdnjNbYSx9WtAZ91ZBfGUkIl";
@@ -144,4 +142,4 @@ var APOD = function(){
 	}
 }
 
-module.exports = APOD;
+export default APOD;

@@ -20,7 +20,7 @@
 
 import React from "react"
 
-var ArrowNav = React.createClass({
+export default class ArrowNav extends React.Component {
 	render() {
 		return (
 			<div className={"arrow-nav " + this.props.direction} onClick={this.props.setNewDate}>
@@ -32,6 +32,4 @@ var ArrowNav = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = ArrowNav;
+}

@@ -16,20 +16,26 @@ At some point I'll need to petition NASA for an API key capable of handling more
 Clone repo.
 > `~ git clone https://github.com/jereddanielson/apod2.0.git`
 
-Enter new directory and install with npm (you may or may not need sudo).
+Enter new directory and install with npm. Requires Node 22.18 or newer (see `.nvmrc`).
 > `~ cd apod2.0`
 
-> `~ sudo npm install`
+> `~ npm install`
 
 ### Build & Run:
 
-Use webpack to package everything. Make sure you're in the apod2.0 folder.
-> `~ webpack`
+For local development, start the dev server. It opens the app in your browser and reloads it whenever a file changes.
+> `~ npm run dev`
+
+To make a production build instead, use webpack to package everything. Make sure you're in the apod2.0 folder.
+> `~ npm run build`
+
+Or rebuild automatically whenever a file changes.
+> `~ npm run watch`
 
 Start an HTTP server of your choice from the public directory.
 > `~ cd public`
 
-> `~ http-server -c-1`
+> `~ npx http-server -c-1`
 
 Copyright Jered Danielson, GNU GPL v3.0, 2016
 

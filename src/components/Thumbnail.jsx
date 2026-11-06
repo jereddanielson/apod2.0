@@ -20,33 +20,33 @@
 
 import React from 'react';
 
-var Moment = require("moment");
+import Moment from "moment"
 
-var Thumbnail = React.createClass({
-	divStyle: {
+export default class Thumbnail extends React.Component {
+	divStyle = {
 		width: "60px", 
 		height: "60px", 
 		position: "relative", 
 		display: "inline-block"
-	},
-	imgStyle: {
+	};
+	imgStyle = {
 		top: "30px", 
 		left: "30px", 
 		transform: "translate(-50%, -50%)", 
 		display: "block", 
 		position: "absolute"
-	},
-	overlayStyle: {
+	};
+	overlayStyle = {
 		position: "absolute",
 		width: "100%",
 		height: "100%"
-	},
-	activeStyle: {
+	};
+	activeStyle = {
 		boxShadow: "inset 0 0 10px rgba(255, 255, 255, 1)",
 		boxSizing: "border-box",
 		border: "2px solid #EDF3FF"
-	},
-	dateHoverStyle: {
+	};
+	dateHoverStyle = {
 		position: "absolute",
 		left: "50%",
 		top: "-18px",
@@ -58,17 +58,17 @@ var Thumbnail = React.createClass({
 		fontFamily: "Open Sans, sans-serif",
 		pointerEvents: "none",
 		zIndex: 50
-	},
-	handleClick(){
+	};
+	handleClick = () => {
 		// when clicked, load the appropriate date way back in index.js
 		if(!this.props.isDragging){
 			this.props.loadEntry(Moment(this.props.dateString));
 		}
-	},
+	};
 	shouldComponentUpdate(nextProps, nextState) {
 		// only update if props differ, which should only happen if it gains/loses isSelected status
 		return nextProps.isSelected !== this.props.isSelected;
-	},
+	}
 	render() {
 		return (
 			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
@@ -83,6 +83,4 @@ var Thumbnail = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = Thumbnail;
+}

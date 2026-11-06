@@ -20,40 +20,39 @@
 
 import React from "react"
 
-var Image = React.createClass({
-	style: {
+export default class Image extends React.Component {
+	style = {
 		boxShadow: "0 0 100px #404448",
 		cursor: "zoom-in",
 		position: "absolute",
 		transform: "translate(-50%, -50%)"
-	},
-	imgstyle: {
+	};
+	imgstyle = {
 		display: "block",
 		maxWidth: "100vw",
 		maxHeight: "calc(100vh - 160px)"
-	},
-	loadingStyle: {
+	};
+	loadingStyle = {
 		display: "block",
 		color: "white",
 		transform: "translate(-50%, -50%)"
-	},
-	getInitialState() {
-		// start unloaded
-		return {loaded: false};
-	},
+	};
+	// start unloaded
+	state = {loaded: false};
 	componentDidMount() {
 		// when mounted, create and load image
-		var imgElement = document.createElement("img");
-		imgElement.onload = this.handleLoaded;
+		this.imgElement = document.createElement("img");
+		this.imgElement.onload = this.handleLoaded;
 		var imgsrc = this.props.imgsrc.replace("http://", "https://");
-		imgElement.src = imgsrc;
-	},
-	handleLoaded() {
+		this.imgElement.src = imgsrc;
+	}
+	componentWillUnmount() {
+		this.imgElement.onload = null;
+	}
+	handleLoaded = () => {
 		// once image successfully loads, switch loaded flag
-		if(this.isMounted()){
-			this.setState({loaded: true});
-		}
-	},
+		this.setState({loaded: true});
+	};
 	render() {
 		var imgsrc = this.props.imgsrc.replace("http://", "https://");
 		return (
@@ -66,6 +65,4 @@ var Image = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = Image;
+}

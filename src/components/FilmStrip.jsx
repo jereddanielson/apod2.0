@@ -31,15 +31,14 @@
 */
 
 import React from "react"
-import ReactDOM from "react-dom"
-import TweenLite from "gsap"
+import gsap from "gsap"
 
-var Moment = require("moment");
+import Moment from "moment"
 
 import Thumbnail from "./Thumbnail.jsx"
 
-var FilmStrip = React.createClass({
-	style: {
+export default class FilmStrip extends React.Component {
+	style = {
 		position: "absolute",
 		width: "100vw",
 		height: "60px",
@@ -49,25 +48,35 @@ var FilmStrip = React.createClass({
 		whiteSpace: "nowrap",
 		fontSize: 0,
 		zIndex: 100
-	},
-	handleWheel(e){
+	};
+	rootRef = React.createRef();
+	handleWheel = (e) => {
 		var scrollAmount = e.deltaX + e.deltaY;
-		this.setState({scrollPos: Math.max(Math.min(this.state.scrollPos + scrollAmount, 0), -453120)});
-	},
-	getInitialState() {
-		return {scrollPos: Math.min(this.props.currentDate.diff(Moment(), "days") * 60 + window.innerWidth / 2 - 30, 0), range: Math.ceil(window.innerWidth / 60 + 1)};
-	},
+		this.scrollBy(scrollAmount);
+	};
+	scrollBy(amount){
+		// updater form, because React may batch several of these into one render
+		this.setState((state) => ({scrollPos: Math.max(-453120, Math.min(0, state.scrollPos + amount))}));
+	}
+	state = {scrollPos: Math.min(this.props.currentDate.diff(Moment(), "days") * 60 + window.innerWidth / 2 - 30, 0), range: Math.ceil(window.innerWidth / 60 + 1)};
 	componentDidMount() {
 		this.updateRange();
 		window.addEventListener("resize", this.updateRange);
-	},
-	componentWillUnmount(){
+		// attached natively because React's own touchmove listener is passive and can't preventDefault
+		this.rootRef.current.addEventListener("touchmove", this.handleTouchMove, {passive: false});
+	}
+	componentWillUnmount() {
 		window.removeEventListener("resize", this.updateRange);
-	},
-	componentWillReceiveProps(nextProps){
-		this.keepCurrentInView(nextProps);
-	},
-	keepCurrentInView(props){
+		this.rootRef.current.removeEventListener("touchmove", this.handleTouchMove);
+	}
+	componentDidUpdate(prevProps) {
+		// props is a new object only when the parent re-rendered. Skipping our own
+		// setState updates is what lets the user scroll the current date out of view.
+		if(prevProps !== this.props){
+			this.keepCurrentInView(this.props);
+		}
+	}
+	keepCurrentInView = (props) => {
 		// check that new date is inside visible range
 		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
 		if(dayFromScroll - 1 < props.currentDate.diff(Moment(), "days")){
@@ -76,16 +85,16 @@ var FilmStrip = React.createClass({
 		}
 		if(dayFromScroll - this.state.range + 2 > props.currentDate.diff(Moment(), "days")){
 			// outside left bounds
-			this.setState({scrollPos: Math.max(-453120, Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (ReactDOM.findDOMNode(this).clientWidth % 60))});
+			this.setState({scrollPos: Math.max(-453120, Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (this.rootRef.current.clientWidth % 60))});
 		}
-	},
-	updateRange(){
+	};
+	updateRange = () => {
 		// the "range" (number of visible thumbnails) is based on window width
-		var thisWidth = ReactDOM.findDOMNode(this).clientWidth;
-		this.setState({range: Math.ceil(thisWidth / 60 + 1)});
-		this.keepCurrentInView(this.props);
-	},
-	handlePointerStart(e){
+		var thisWidth = this.rootRef.current.clientWidth;
+		// wait for the new range to be applied, keepCurrentInView depends on it
+		this.setState({range: Math.ceil(thisWidth / 60 + 1)}, () => this.keepCurrentInView(this.props));
+	};
+	handlePointerStart = (e) => {
 		if(this.inertiaTween){
 			this.inertiaTween.kill();
 		}
@@ -93,41 +102,43 @@ var FilmStrip = React.createClass({
 		this.firstClientX = e.clientX;
 		this.lastClientX = e.clientX;
 		this.isPointerDown = true;
-	},
-	handlePointerMove(e){
+	};
+	handlePointerMove = (e) => {
 		if(this.isPointerDown){
 			var isNowDragging = this.state.isDragging;
 			if(!this.state.isDragging && Math.abs(this.firstClientX - e.clientX) > 10){
 				isNowDragging = true;
 			}
 			this.lastVelocity = this.lastClientX - e.clientX;
-			this.setState({scrollPos: Math.max(-453120, Math.min(0, this.state.scrollPos + this.lastVelocity)), isDragging: isNowDragging});
+			this.scrollBy(this.lastVelocity);
+			this.setState({isDragging: isNowDragging});
 			this.lastClientX = e.clientX;
 		}
-	},
-	handlePointerUp(e){
+	};
+	handlePointerUp = (e) => {
 		this.isPointerDown = false;
 		var self = this;
 		if(this.state.isDragging){
-			this.inertiaTween = TweenLite.to(this, 1, {lastVelocity: 0, onUpdate: function(){
-				self.setState({scrollPos: Math.max(-453120, Math.min(0, self.state.scrollPos + self.lastVelocity)), isDragging: false});
+			this.inertiaTween = gsap.to(this, {duration: 1, lastVelocity: 0, onUpdate: function(){
+				self.scrollBy(self.lastVelocity);
+				self.setState({isDragging: false});
 			}});
 		}
-	},
-	handleTouchStart(e){
+	};
+	handleTouchStart = (e) => {
 		this.handlePointerStart({clientX: e.touches[0].clientX});
-	},
-	handleTouchMove(e){
+	};
+	handleTouchMove = (e) => {
 		if(this.state.isDragging){
 			e.preventDefault(); // prevent scroll if filmstrip is dragging
 		}
 		this.handlePointerMove({clientX: e.touches[0].clientX});
-	},
-	handleTouchUp(e){
+	};
+	handleTouchUp = (e) => {
 		if(e.touches.length == 0){
 			this.handlePointerUp(e);
 		}
-	},
+	};
 	render() {
 		//console.log(Date.now());
 		var dateArr = []; // all the dates to show (date strings)
@@ -151,7 +162,7 @@ var FilmStrip = React.createClass({
 		var self = this;
 
 		return (
-			<div id="filmstrip" onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handleTouchStart} onTouchMove={this.handleTouchMove} onTouchEnd={this.handleTouchUp} onTouchCancel={this.handleTouchUp} style={this.style}>
+			<div id="filmstrip" ref={this.rootRef} onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handleTouchStart} onTouchEnd={this.handleTouchUp} onTouchCancel={this.handleTouchUp} style={this.style}>
 				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
 						return <Thumbnail isSelected={dateString == self.props.currentDate.toJSON().substring(0, 10) ? true : undefined} key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />
@@ -160,6 +171,4 @@ var FilmStrip = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = FilmStrip;
+}

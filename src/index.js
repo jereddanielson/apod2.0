@@ -21,9 +21,9 @@
 */
 
 import React from "react"
-import ReactDOM from "react-dom"
+import {createRoot} from "react-dom/client"
 
-var Moment = require("moment");
+import Moment from "moment"
 
 import APOD from "./modules/APOD.jsx"
 
@@ -35,20 +35,19 @@ import HiRes from "./components/HiRes.jsx"
 import ArrowNav from "./components/ArrowNav.jsx"
 import Info from "./components/Info.jsx"
 
-var APP = React.createClass({
-	style: {
+class APP extends React.Component {
+	style = {
 		position: "absolute",
 		width: "100vw",
 		height: "100vh",
 		background: "#000408",
 		overflow: "hidden"
-	},
-	earliestPossibleDate: Moment("1995-09-22"),
-	latestPossibleDate: Moment(),
-	getInitialState() {
-		return {date: {}, data: {}, showHiRes: false, initialImageLoaded: false};
-	},
-	handleKeyDown(e) {
+	};
+	earliestPossibleDate = Moment("1995-09-22");
+	latestPossibleDate = Moment();
+	rootRef = React.createRef();
+	state = {date: {}, data: {}, showHiRes: false, initialImageLoaded: false};
+	handleKeyDown = (e) => {
 		if(e.keyCode >= 37 && e.keyCode <= 40){
 			e.preventDefault();
 			switch(e.keyCode){
@@ -62,13 +61,13 @@ var APP = React.createClass({
 					break;
 			}
 		}
-	},
-	loadNextEntry() {
+	};
+	loadNextEntry = () => {
 		this.loadEntry(Moment(this.state.date).add(1, "days"));
-	},
-	loadPrevEntry() {
+	};
+	loadPrevEntry = () => {
 		this.loadEntry(Moment(this.state.date).subtract(1, "days"));
-	},
+	};
 	componentDidMount() {
 		document.addEventListener("keydown", this.handleKeyDown);
 		var _self = this;
@@ -81,17 +80,23 @@ var APP = React.createClass({
 		this.loadInitialImage();
 		window.addEventListener("resize", this.handleResize);
 		this.handleResize();
-	},
+		// attached natively because React's own wheel listener is passive and can't preventDefault
+		this.rootRef.current.addEventListener("wheel", this.preventWheel, {passive: false});
+	}
 	componentWillUnmount() {
 		document.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("resize", this.handleResize);
-	},
-	handleResize() {
-		this.setState({clientWidth: ReactDOM.findDOMNode(this).clientWidth});
-	},
+		this.rootRef.current.removeEventListener("wheel", this.preventWheel);
+	}
+	handleResize = () => {
+		this.setState({clientWidth: this.rootRef.current.clientWidth});
+	};
+	preventWheel = (e) => {
+		e.preventDefault();
+	};
 	render() {
 		return (
-			<div id="app" className="abs-pos" onWheel={function(e){e.preventDefault();}} onScroll={function(e){e.preventDefault();}} style={this.style}>
+			<div id="app" className="abs-pos" ref={this.rootRef} style={this.style}>
 				<Menu />
 				{this.state.initialImageLoaded ? <SideBar data={this.state.data} currentDate={this.state.date} setNewDate={this.loadEntry} /> : undefined}
 				{this.state.initialImageLoaded ? <FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} /> : undefined}
@@ -107,8 +112,8 @@ var APP = React.createClass({
 				<Info />
 			</div>
 		);
-	},
-	loadInitialImage(){
+	}
+	loadInitialImage = () => {
 		var _self = this;
 		var dateToLoad = Moment(location.hash.substring(1, 11));
 		if(dateToLoad.isValid() && dateToLoad.isSameOrBefore(this.latestPossibleDate) && dateToLoad.isSameOrAfter(this.earliestPossibleDate)){
@@ -131,13 +136,13 @@ var APP = React.createClass({
 				_self.updateData(d, curDate);
 			});
 		}
-	},
-	loadEntry(_date) {
+	};
+	loadEntry = (_date) => {
 		var dateToLoad = _date.isSameOrBefore(this.earliestPossibleDate) ? this.earliestPossibleDate.clone() : _date;
 		dateToLoad = dateToLoad.isSameOrAfter(this.latestPossibleDate) ? this.latestPossibleDate.clone() : dateToLoad;
 		location.hash = dateToLoad.toJSON().substring(0, 10);
-	},
-	fetchFromAPOD(_date){
+	};
+	fetchFromAPOD = (_date) => {
 		// make sure new entry to load isn't past the cutoff date
 		if(_date.isSameOrBefore(Moment()) && !_date.isSame(this.state.date)){
 			var _self = this;
@@ -151,8 +156,8 @@ var APP = React.createClass({
 		} else {
 			this.loadInitialImage();
 		}
-	},
-	updateData(_data, _date){
+	};
+	updateData = (_data, _date) => {
 		// update app data with what came back from APOD module
 		// only update if the new data agreees with the currently selected date
 		if(_date.toJSON().substring(0, 10) === _data.date){
@@ -173,12 +178,12 @@ var APP = React.createClass({
 				this.setState({initialImageLoaded: true});
 			}
 		}
-	},
-	onIMGLoad(){
-	},
-	toggleHiRes(){
+	};
+	onIMGLoad = () => {
+	};
+	toggleHiRes = () => {
 		this.setState({showHiRes: !this.state.showHiRes});
-	}
-});
+	};
+}
 
-ReactDOM.render(<APP apod={new APOD()} />, document.getElementById("app-container"));
+createRoot(document.getElementById("app-container")).render(<APP apod={new APOD()} />);

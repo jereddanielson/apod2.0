@@ -21,17 +21,17 @@
 import React from "react"
 import DateBox from "./DateBox.jsx"
 
-var Moment = require("moment");
+import Moment from "moment"
 
-var SideBar = React.createClass({
-	style: {
+export default class SideBar extends React.Component {
+	style = {
 		color: "#ccc",
 		position: "absolute",
 		width: "100%",
 		left: "0",
 		top: "0"
-	},
-	titleStyle: {
+	};
+	titleStyle = {
 		fontFamily: "'Roboto Slab', monospace",
 		padding: "0 20px",
 		margin: 0,
@@ -43,8 +43,8 @@ var SideBar = React.createClass({
 		left: "50%",
 		transform: "translateX(-50%)",
 		position: "absolute"
-	},
-	explanationStyle: {
+	};
+	explanationStyle = {
 		fontSize: "16px",
 		letterSpacing: ".05em",
 		padding: "20px",
@@ -55,12 +55,12 @@ var SideBar = React.createClass({
 		zIndex: 20,
 		maxWidth: "100vw",
 		boxSizing: "border-box"
-	},
-	pStyle: {
+	};
+	pStyle = {
 		color: "#aaa",
 		fontFamily: "Roboto Slab, serif",
 		fontWeight: 300
-	},
+	};
 	render() {
 		return (
 			<div id="sidebar" style={this.style}>
@@ -80,6 +80,4 @@ var SideBar = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = SideBar;
+}

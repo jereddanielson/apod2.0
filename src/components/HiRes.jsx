@@ -20,16 +20,16 @@
 
 import React from "react"
 
-var HiRes = React.createClass({
-	style: {
+export default class HiRes extends React.Component {
+	style = {
 		width: "100%",
 		height: "100%",
 		position: "absolute",
 		backgroundColor: "rgba(0, 0, 0, .9)",
 		cursor: "zoom-out",
 		zIndex: 2000
-	},
-	imgStyle: {
+	};
+	imgStyle = {
 		position: "absolute",
 		left: "50%",
 		top: "50%",
@@ -37,8 +37,8 @@ var HiRes = React.createClass({
 		maxWidth: "100vw",
 		maxHeight: "100vh",
 		boxShadow: "0 0 100px #404448"
-	},
-	render(){
+	};
+	render() {
 		var url = this.props.url.replace("http://", "https://");
 		return (
 			<div style={this.style} onClick={this.props.toggleHiRes}>
@@ -46,6 +46,4 @@ var HiRes = React.createClass({
 			</div>
 		);
 	}
-});
-
-module.exports = HiRes;
+}

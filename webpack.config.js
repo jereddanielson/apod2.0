@@ -18,17 +18,38 @@
 	along with APOD 2.0.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-module.exports = {
-	entry: "./src/index.js",
-	output: {
-		filename: "./public/bundle.js"
-	},
-	module: {
-		loaders: [
-			{
-				exclude: /(node_modules|app-server.js|package.json)/,
-				loader: "babel?presets[]=react,presets[]=es2015"
-			}
-		]
-	}
-}
+const path = require("path");
+
+module.exports = (env, argv) => {
+	const mode = argv.mode || "production";
+	return {
+		mode,
+		entry: "./src/index.js",
+		output: {
+			path: path.resolve(__dirname, "public"),
+			filename: "bundle.js"
+		},
+		devtool: "source-map",
+		devServer: {
+			static: path.resolve(__dirname, "public"),
+			open: true
+		},
+		performance: {
+			hints: false
+		},
+		module: {
+			rules: [
+				{
+					test: /\.jsx?$/,
+					exclude: /node_modules/,
+					loader: "babel-loader",
+					options: {
+						// webpack's mode doesn't reach Babel on its own, and without it the
+						// JSX preset emits dev-only calls that production React doesn't have
+						envName: mode
+					}
+				}
+			]
+		}
+	};
+};
