@@ -62,6 +62,13 @@ export default class Thumbnail extends React.Component {
 		pointerEvents: "none",
 		zIndex: 50
 	};
+	playIconStyle = {
+		position: "absolute",
+		left: "50%",
+		top: "50%",
+		transform: "translate(-50%, -50%)",
+		pointerEvents: "none"
+	};
 	handleClick = () => {
 		// when clicked, load the appropriate date way back in index.js
 		if(!this.props.isDragging){
@@ -69,14 +76,15 @@ export default class Thumbnail extends React.Component {
 		}
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		// only update if it gains/loses isSelected status, or its image has arrived
-		return nextProps.isSelected !== this.props.isSelected || nextProps.imgsrc !== this.props.imgsrc;
+		// only update if it gains/loses isSelected status, or its summary has arrived
+		return nextProps.isSelected !== this.props.isSelected || nextProps.imgsrc !== this.props.imgsrc || nextProps.isVideo !== this.props.isVideo;
 	}
 	render() {
 		return (
 			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
 				<div style={{position: "absolute", width: 20, height: 20, borderRadius: 10, background: "rgba(255, 255, 255, 0.25)", left: "50%", top: "50%", transform: "translate(-50%, -50%)"}}></div>
 				{this.props.imgsrc ? <img style={this.imgStyle} alt="" onDragStart={function(e){e.preventDefault();}} onError={function(e){e.target.style.display = "none";}} src={this.props.imgsrc} /> : undefined}
+				{this.props.isVideo ? <svg style={this.playIconStyle} width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="rgba(0, 0, 0, 0.5)" /><path fill="rgba(255, 255, 255, 0.8)" d="M9.5 7v10l8-5z" /></svg> : undefined}
 				{(() => {if(this.props.isSelected){
 					return <div style={Object.assign({}, this.overlayStyle, this.activeStyle)} className="thumbnail-overlay"></div>
 				} else {

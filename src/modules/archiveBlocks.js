@@ -97,6 +97,16 @@ export function getThumbnailUrl(dateString){
 }
 
 /*
+Check whether a date's entry is a video, if its summary has been loaded.
+@param {string} dateString - Date in YYYY-MM-DD format
+@returns {boolean} - True for a video, false for an image or a summary that hasn't loaded
+*/
+export function isVideoEntry(dateString){
+	var summary = getSummary(dateString);
+	return summary !== undefined && summary.media_type !== "image";
+}
+
+/*
 Make sure the summaries of these dates are loaded, requesting any missing blocks.
 @param {string[]} dateStrings - Dates in YYYY-MM-DD format
 @param {function} onLoaded - Called each time a block finishes loading

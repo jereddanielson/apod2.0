@@ -35,7 +35,7 @@ import gsap from "gsap"
 import Moment from "moment"
 
 import {EARLIEST_DATE, toDateString} from "../modules/nasa.js"
-import {getThumbnailUrl, loadBlocks} from "../modules/archiveBlocks.js"
+import {getThumbnailUrl, isVideoEntry, loadBlocks} from "../modules/archiveBlocks.js"
 
 import Thumbnail from "./Thumbnail.jsx"
 
@@ -194,7 +194,7 @@ export default class FilmStrip extends React.Component {
 			<div id="filmstrip" ref={this.rootRef} onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handleTouchStart} onTouchEnd={this.handleTouchUp} onTouchCancel={this.handleTouchUp} style={this.style}>
 				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
-						return <Thumbnail isSelected={dateString == toDateString(self.props.currentDate) ? true : undefined} key={dateString + "thumb"} dateString={dateString} imgsrc={getThumbnailUrl(dateString)} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />
+						return <Thumbnail isSelected={dateString == toDateString(self.props.currentDate) ? true : undefined} key={dateString + "thumb"} dateString={dateString} imgsrc={getThumbnailUrl(dateString)} isVideo={isVideoEntry(dateString)} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />
 					})}
 				</div>
 			</div>
