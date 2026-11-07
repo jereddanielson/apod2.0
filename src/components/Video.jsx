@@ -21,17 +21,35 @@
 import React from "react"
 
 export default class Video extends React.Component {
-	iframeStyle = {
+	videoStyle = {
 		width: "960px",
 		height: "540px",
+		maxWidth: "100vw",
+		maxHeight: "calc(100vh - 160px)",
 		position: "absolute",
 		transform: "translate(-50%, -50%)",
-		boxShadow: "0 0 100px #404448"
+		boxShadow: "0 0 100px #404448",
+		background: "#000"
+	};
+	messageStyle = {
+		position: "absolute",
+		width: "100vw",
+		transform: "translate(-50%, -50%)",
+		textAlign: "center"
+	};
+	state = {failed: false};
+	// clicks on the player's controls shouldn't reach ContentBox, which would open the hi-res view
+	stopClick = (e) => {
+		e.stopPropagation();
 	};
 	render() {
-		var vidsrc = this.props.vidsrc.replace("http://", "https://");
-		return (
-			<iframe style={this.iframeStyle} src={vidsrc} frameBorder={0} allowFullScreen alt={this.props.alt} title={this.props.title} />
-		);
+		if(this.props.type === "iframe"){
+			return <iframe style={this.videoStyle} src={this.props.vidsrc} frameBorder={0} allowFullScreen title={this.props.title} />;
+		}
+		if(this.state.failed){
+			// not every browser can play every format in the archive
+			return <div style={this.messageStyle} onClick={this.stopClick}><a href={this.props.vidsrc} target="_blank" rel="noopener noreferrer">Your browser can't play this video here. Open it directly.</a></div>;
+		}
+		return <video style={this.videoStyle} src={this.props.vidsrc} controls title={this.props.title} onClick={this.stopClick} onError={() => this.setState({failed: true})} />;
 	}
 }

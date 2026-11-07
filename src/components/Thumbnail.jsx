@@ -34,7 +34,10 @@ export default class Thumbnail extends React.Component {
 		left: "30px", 
 		transform: "translate(-50%, -50%)", 
 		display: "block", 
-		position: "absolute"
+		position: "absolute",
+		width: "60px",
+		height: "60px",
+		objectFit: "cover"
 	};
 	overlayStyle = {
 		position: "absolute",
@@ -66,14 +69,14 @@ export default class Thumbnail extends React.Component {
 		}
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		// only update if props differ, which should only happen if it gains/loses isSelected status
-		return nextProps.isSelected !== this.props.isSelected;
+		// only update if it gains/loses isSelected status, or its image has arrived
+		return nextProps.isSelected !== this.props.isSelected || nextProps.imgsrc !== this.props.imgsrc;
 	}
 	render() {
 		return (
 			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
 				<div style={{position: "absolute", width: 20, height: 20, borderRadius: 10, background: "rgba(255, 255, 255, 0.25)", left: "50%", top: "50%", transform: "translate(-50%, -50%)"}}></div>
-				<img style={this.imgStyle} onDragStart={function(e){e.preventDefault();}} src={"https://apod.nasa.gov/apod/calendar/S_" + this.props.dateString.replace("-", "").replace("-", "").substring(2, 8) + ".jpg"} />
+				{this.props.imgsrc ? <img style={this.imgStyle} alt="" onDragStart={function(e){e.preventDefault();}} onError={function(e){e.target.style.display = "none";}} src={this.props.imgsrc} /> : undefined}
 				{(() => {if(this.props.isSelected){
 					return <div style={Object.assign({}, this.overlayStyle, this.activeStyle)} className="thumbnail-overlay"></div>
 				} else {

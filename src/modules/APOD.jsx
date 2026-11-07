@@ -34,64 +34,126 @@
 
 import React from "react"
 
-import $ from "jquery"
+import Moment from "moment"
+
+import {getSummary} from "./archiveBlocks.js"
+import {API_URL, cleanCredit, cleanExplanation, findVideo, resizedImageUrl, toDateCode, toDateString} from "./nasa.js"
 
 import Image from "../components/Image.jsx"
+import Loading from "../components/Loading.jsx"
 import Video from "../components/Video.jsx"
 
 var APOD = function(){
-	var _KEY = "mwTWt97WoV91jHjbgdnjNbYSx9WtAZ91ZBfGUkIl";
-	var _URL = "https://api.nasa.gov/planetary/apod?hd=true&api_key=" + _KEY;
+	// width of the image shown on the main page, the hi-res view uses the full size
+	var _IMAGE_WIDTH = 1920;
 
 	// map of cached data pulled from the API
 	var dataCache = new Map();
 
 	/*
-	Query the APOD API for a date and get the data.
+	Get whatever we have for a date right now, without making a request.
+	This is what lets a new date appear instantly. If isComplete is false on the
+	result, there's more to come and the rest needs to be requested with APOD.get().
+	@param {Date} date - Date to retrieve data for
+	@returns {object} - The date's data, which is at least a loading indicator
+	*/
+	this.getInstant = function(date){
+		var dateString = toDateString(date);
+		if(dataCache.has(dateString)){
+			return dataCache.get(dateString);
+		}
+		var summary = getSummary(dateString);
+		if(summary){
+			var ret = formatEntry(summary);
+			if(ret.isComplete){
+				dataCache.set(dateString, ret);
+			}
+			return ret;
+		}
+		return {date: dateString, mediatype: "loading", isComplete: false, reactElement: <Loading key={dateString + "loading"} />};
+	};
+
+	/*
+	Query the APOD API for a date (or the latest entry, if there's no date) and get the data.
 	Calls the passed onSuccess and onFail functions as callbacks
 	@param {Date} date - Date to retrieve data for
 	@param {function} onSuccess - Callback for successful API retrieval
 	@param {function} [onFail] - Callback for failure
 	*/
 	this.get = function(date, onSuccess = function(d){}, onFail = function(d){}){
-		// first check to see if we have an entry for this in "data"
+		// first check to see if we already have everything for this date
 
 		// key date string for looking up date
-		var dateString = (date !== undefined) ? date.toJSON().substring(0, 10) : undefined;
-		if(date !== undefined && dataCache.has(dateString)){
-			// load from "data"
-			onSuccess(dataCache.get(dateString));
+		var dateString = (date !== undefined) ? toDateString(date) : undefined;
+		var instant = (date !== undefined) ? this.getInstant(date) : undefined;
+		if(instant && instant.isComplete){
+			onSuccess(instant);
 		} else {
 			// load from API
-			$.ajax({url: _URL + (date !== undefined ? "&date=" + (date.toJSON().substring(0, 10)) : ""), dataType: "json",
-			success: function(data){
-				onGetComplete(data, onSuccess);
-			},
-			error: function(e){
+			fetch(API_URL + (date !== undefined ? "/" + toDateCode(date) : "?per_page=1")).then(function(response){
+				if(!response.ok){
+					throw {status: response.status};
+				}
+				return response.json();
+			}).then(function(data){
+				// the latest entry comes back as a list of one
+				var entry = Array.isArray(data) ? data[0] : data;
+				if(entry){
+					onGetComplete(entry, onSuccess);
+				} else {
+					onError({status: "empty"}, onFail, dateString);
+				}
+			}, function(e){
+				// passed as a second argument, so that this only handles a failed request
+				// and not a bug in the code above
 				onError(e, onFail, dateString);
-			}});
+			});
 		}
 	};
 
 	/*
 	Execute the onSuccess callback from APOD.get().
-	Creates an object to pass to the callback, then calls the callback with object.
 	@param {object} data - Data retrieved from the APOD API
 	@param {function} callOnSuccess - Callback to pass the formatted data to
 	*/
 	function onGetComplete(data, callOnSuccess){
-		var ret = {};
-		ret.copyright = data.copyright;
-		ret.date = data.date;
-		ret.explanation = data.explanation;
-		ret.hdurl = data.hdurl;
-		ret.mediatype = data.media_type;
-		ret.title = data.title;
-		ret.sdurl = data.url;
-		ret.fetchtime = Date.now();
-		ret.reactElement = (ret.mediatype === "image") ? <Image key={ret.date + "img"} imgsrc={ret.sdurl} alt={ret.explanation} title={ret.title} /> : <Video key={ret.date + "vid"} vidsrc={ret.sdurl} alt={ret.explanation} title={ret.title} />;
+		var ret = formatEntry(data);
 		dataCache.set(ret.date, ret);
 		callOnSuccess(ret);
+	}
+
+	/*
+	Create our version of an entry from what the API returned.
+	@param {object} data - A full entry from the API, or a summary without basic_html
+	@returns {object} - The formatted data
+	*/
+	function formatEntry(data){
+		var ret = {};
+		ret.credit = cleanCredit(data.credit);
+		ret.date = data.date;
+		ret.explanation = cleanExplanation(data.explanation);
+		ret.hdurl = data.hdurl;
+		ret.mediatype = data.media_type;
+		ret.permalink = data.permalink;
+		ret.title = data.title;
+		ret.sdurl = data.hdurl ? resizedImageUrl(data.hdurl, _IMAGE_WIDTH) : undefined;
+		ret.fetchtime = Date.now();
+		ret.isComplete = true;
+		// anything that isn't an image should be a video, but show its image if we can't find one
+		var video = (ret.mediatype !== "image") ? findVideo(data.basic_html) : undefined;
+		if(ret.mediatype !== "image" && data.basic_html === undefined){
+			// a video's location isn't in the summary, so its text is all we can show for now
+			ret.isComplete = false;
+			ret.hdurl = undefined;
+			ret.reactElement = <Loading key={ret.date + "loading"} />;
+		} else if(video){
+			ret.reactElement = <Video key={ret.date + "vid"} type={video.type} vidsrc={video.src} permalink={ret.permalink} title={ret.title} />;
+		} else if(ret.sdurl) {
+			ret.reactElement = <Image key={ret.date + "img"} imgsrc={ret.sdurl} fallbacksrc={ret.hdurl} alt={data.alt} title={ret.title} />;
+		} else {
+			ret.reactElement = errorElement(<a href={ret.permalink} target="_blank" rel="noopener noreferrer">View this entry on NASA's website.</a>);
+		}
+		return ret;
 	}
 
 	/*
@@ -100,13 +162,20 @@ var APOD = function(){
 	@param {function} callOnFail - Callback
 	@param [string] _dateString - Date string of the error
 	*/
-	function onError(e, callOnFail, _dateString = Date.now()){
-		console.log("Error " + (e.status) + " while retrieving data from NASA APOD API. '"+_dateString+"' probably does not exist.");
+	function onError(e, callOnFail, _dateString = toDateString(Moment())){
+		console.log("Error " + (e.status || e.message) + " while retrieving '" + _dateString + "' from NASA APOD API.");
+		var isMissing = e.status === 404;
 		var ret = {};
 		ret.date = _dateString;
 		ret.mediatype = "error";
-		ret.title = "API Error";
-		ret.explanation = "NASA'S API generated an error. Try viewing the original webpage on their website."
+		ret.title = isMissing ? "No Entry" : "API Error";
+		ret.explanation = isMissing ? "NASA doesn't have an entry for this date. It may not have been published yet." : "NASA's API generated an error. Try viewing the original webpage on their website.";
+		ret.reactElement = errorElement(isMissing ? <>There's no entry for {ret.date}.<br/>It may not have been published yet.</> : <>Error retrieving {ret.date}.<br/>This is likely a problem with NASA's API and I can't fix it.</>);
+		// not cached, since trying again later might work
+		callOnFail(ret);
+	}
+
+	function errorElement(contents){
 		var errorStyle = {
 			position: "absolute",
 			color: "#ddd",
@@ -114,9 +183,7 @@ var APOD = function(){
 			transform: "translate(-50%, -50%)",
 			textAlign: "center"
 		};
-		ret.reactElement = <div style={errorStyle} className="api-error-element">Error retrieving {ret.date}.<br/>This is likely a problem with NASA's API and I can't fix it.</div>;
-		dataCache.set(ret.date, ret);
-		callOnFail(ret);
+		return <div style={errorStyle} className="api-error-element">{contents}</div>;
 	}
 
 	/*
@@ -131,8 +198,7 @@ var APOD = function(){
 			// preload by creating image element (only if mediatype is an image, not video)
 			if(d.mediatype === "image"){
 				var img = document.createElement("img");
-				var url = d.sdurl.replace("http://", "https://");
-				img.src = url;
+				img.src = d.sdurl;
 			}
 		}, onFail);
 	}

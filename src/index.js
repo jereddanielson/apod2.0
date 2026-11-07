@@ -26,6 +26,7 @@ import {createRoot} from "react-dom/client"
 import Moment from "moment"
 
 import APOD from "./modules/APOD.jsx"
+import {EARLIEST_DATE, toDateString} from "./modules/nasa.js"
 
 import Menu from "./components/Menu.jsx"
 import SideBar from "./components/SideBar.jsx"
@@ -43,7 +44,7 @@ class APP extends React.Component {
 		background: "#000408",
 		overflow: "hidden"
 	};
-	earliestPossibleDate = Moment("1995-09-22");
+	earliestPossibleDate = Moment(EARLIEST_DATE);
 	latestPossibleDate = Moment();
 	rootRef = React.createRef();
 	state = {date: {}, data: {}, showHiRes: false, initialImageLoaded: false};
@@ -72,10 +73,12 @@ class APP extends React.Component {
 		document.addEventListener("keydown", this.handleKeyDown);
 		var _self = this;
 		window.onpopstate = function(e){
-			var theHash = location.hash.replace("#", ""); // theHash might be empty
-			var theMoment = Moment(theHash);
-			theMoment = theMoment.isValid() ? theMoment : Moment(); // Moment must be valid
-			_self.fetchFromAPOD(theMoment);
+			var theMoment = Moment(location.hash.substring(1), "YYYY-MM-DD", true); // the hash might be empty
+			if(theMoment.isValid()){
+				_self.fetchFromAPOD(theMoment);
+			} else {
+				_self.loadInitialImage();
+			}
 		}
 		this.loadInitialImage();
 		window.addEventListener("resize", this.handleResize);
@@ -100,7 +103,7 @@ class APP extends React.Component {
 				<Menu />
 				{this.state.initialImageLoaded ? <SideBar data={this.state.data} currentDate={this.state.date} setNewDate={this.loadEntry} /> : undefined}
 				{this.state.initialImageLoaded ? <FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} /> : undefined}
-				{(() => {if(this.state.showHiRes){
+				{(() => {if(this.state.showHiRes && this.state.data.hdurl){
 					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
 				} else {
 					return <ContentBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes} >
@@ -115,44 +118,54 @@ class APP extends React.Component {
 	}
 	loadInitialImage = () => {
 		var _self = this;
-		var dateToLoad = Moment(location.hash.substring(1, 11));
+		var request = _self.latestRequest = {};
+		var dateToLoad = Moment(location.hash.substring(1), "YYYY-MM-DD", true);
 		if(dateToLoad.isValid() && dateToLoad.isSameOrBefore(this.latestPossibleDate) && dateToLoad.isSameOrAfter(this.earliestPossibleDate)){
 			// seems to be a valid date in the URL hash
-			this.props.apod.get(dateToLoad, function(d){
-				var curDate = Moment(d.date);
-				_self.setState({date: curDate, initialImageLoaded: true});
-				_self.updateData(d, curDate);
-			}, function(d){
-				var curDate = Moment(d.date);
-				_self.setState({date: curDate, initialImageLoaded: true});
-				_self.updateData(d, curDate);
-			});
+			var onLoad = function(d){
+				if(request === _self.latestRequest){
+					var curDate = Moment(d.date);
+					_self.setState({date: curDate, initialImageLoaded: true});
+					_self.updateData(d, curDate);
+				}
+			};
+			this.props.apod.get(dateToLoad, onLoad, onLoad);
 		} else {
 			// no valid URL hash for the date
 			location.hash = "";
-			this.props.apod.get(undefined, function(d){
-				var curDate = Moment(d.date);
-				_self.setState({date: curDate, initialImageLoaded: true});
-				_self.updateData(d, curDate);
-			});
+			var onLoad = function(d){
+				if(request === _self.latestRequest){
+					var curDate = Moment(d.date);
+					_self.setState({date: curDate, initialImageLoaded: true});
+					_self.updateData(d, curDate);
+				}
+			};
+			this.props.apod.get(undefined, onLoad, onLoad);
 		}
 	};
 	loadEntry = (_date) => {
 		var dateToLoad = _date.isSameOrBefore(this.earliestPossibleDate) ? this.earliestPossibleDate.clone() : _date;
 		dateToLoad = dateToLoad.isSameOrAfter(this.latestPossibleDate) ? this.latestPossibleDate.clone() : dateToLoad;
-		location.hash = dateToLoad.toJSON().substring(0, 10);
+		location.hash = toDateString(dateToLoad);
 	};
 	fetchFromAPOD = (_date) => {
 		// make sure new entry to load isn't past the cutoff date
 		if(_date.isSameOrBefore(Moment()) && !_date.isSame(this.state.date)){
 			var _self = this;
-			// get rid of current data???
-			_self.setState({date: Moment(_date)});
-			_self.props.apod.get(_date, function(d){
-				_self.updateData(d, _date);
-			}, function(d){
-				_self.updateData(d, _date);
-			});
+			// a slow response for an earlier request mustn't replace this one
+			var request = _self.latestRequest = {};
+			// replace the current data right away, with whatever we have for the new date
+			var instant = _self.props.apod.getInstant(_date);
+			if(instant.title){
+				document.title = "APOD 2.0 - " + instant.title;
+			}
+			_self.setState({date: Moment(_date), data: instant});
+			var onLoad = function(d){
+				if(request === _self.latestRequest){
+					_self.updateData(d, _date);
+				}
+			};
+			_self.props.apod.get(_date, onLoad, onLoad);
 		} else {
 			this.loadInitialImage();
 		}
@@ -160,7 +173,7 @@ class APP extends React.Component {
 	updateData = (_data, _date) => {
 		// update app data with what came back from APOD module
 		// only update if the new data agreees with the currently selected date
-		if(_date.toJSON().substring(0, 10) === _data.date){
+		if(toDateString(_date) === _data.date){
 			// update title???
 			document.title = "APOD 2.0 - " + _data.title;
 			this.setState({data: _data});
@@ -171,7 +184,7 @@ class APP extends React.Component {
 			}
 			this.props.apod.preload(Moment(_date).subtract(1, "days"));
 			// Send Google Analytics pageview
-			ga("set", "page", "#" + _date.toJSON().substring(0, 10));
+			ga("set", "page", "#" + toDateString(_date));
 			ga("send", "pageview");
 			// If we weren't loaded properly before, we are now!
 			if(!this.state.initialImageLoaded){
@@ -182,6 +195,10 @@ class APP extends React.Component {
 	onIMGLoad = () => {
 	};
 	toggleHiRes = () => {
+		// error messages have no image to show
+		if(!this.state.showHiRes && !this.state.data.hdurl){
+			return;
+		}
 		this.setState({showHiRes: !this.state.showHiRes});
 	};
 }

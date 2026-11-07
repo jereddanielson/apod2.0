@@ -21,6 +21,8 @@
 import React from "react"
 import DateBox from "./DateBox.jsx"
 
+import {toDateCode} from "../modules/nasa.js"
+
 import Moment from "moment"
 
 export default class SideBar extends React.Component {
@@ -67,14 +69,11 @@ export default class SideBar extends React.Component {
 				<DateBox curDate={this.props.currentDate} setNewDate={this.props.setNewDate} />
 				<div id="sidebar-title" style={this.titleStyle}>{this.props.data.title}</div>
 				<div id="sidebar-explanation" style={this.explanationStyle}>
-					<div>{this.props.data.explanation}</div>
+					{/* cleaned by DOMPurify in modules/nasa.js */}
+					<div dangerouslySetInnerHTML={{__html: this.props.data.explanation}} />
 					<div className="sidebar-sourceinfo">
-						<a target="_blank" href={"http://apod.nasa.gov/apod/ap" + this.props.currentDate.clone().format("YYMMDD").toString() + ".html"}>Source</a>
-						{(() => {if(this.props.data.copyright){
-							return " | Image \u00A9 " + this.props.data.copyright;
-						} else {
-							return undefined;
-						}})()}
+						<a target="_blank" rel="noopener noreferrer" href={this.props.data.permalink || "https://apod.nasa.gov/apod/ap" + toDateCode(this.props.currentDate) + ".html"}>Source</a>
+						{this.props.data.credit ? <span> | Credit: <span dangerouslySetInnerHTML={{__html: this.props.data.credit}} /></span> : undefined}
 					</div>
 				</div>
 			</div>

@@ -9,8 +9,6 @@ NASA's Astronomy Picture of the Day is a fantastic resource for space enthusiast
 - Intelligently preload and cache data to increase perceived speed
 - Host the final project at http://apod.jered.io and spread awareness over social media
 
-At some point I'll need to petition NASA for an API key capable of handling more than 1,000 requests per day.
-
 ### Installation:
 
 Clone repo.

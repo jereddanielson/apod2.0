@@ -20,6 +20,8 @@
 
 import React from "react"
 
+import Loading from "./Loading.jsx"
+
 export default class Image extends React.Component {
 	style = {
 		boxShadow: "0 0 100px #404448",
@@ -38,29 +40,37 @@ export default class Image extends React.Component {
 		transform: "translate(-50%, -50%)"
 	};
 	// start unloaded
-	state = {loaded: false};
+	state = {loaded: false, src: this.props.imgsrc};
 	componentDidMount() {
 		// when mounted, create and load image
 		this.imgElement = document.createElement("img");
 		this.imgElement.onload = this.handleLoaded;
-		var imgsrc = this.props.imgsrc.replace("http://", "https://");
-		this.imgElement.src = imgsrc;
+		this.imgElement.onerror = this.handleError;
+		this.imgElement.src = this.state.src;
 	}
 	componentWillUnmount() {
 		this.imgElement.onload = null;
+		this.imgElement.onerror = null;
 	}
 	handleLoaded = () => {
 		// once image successfully loads, switch loaded flag
 		this.setState({loaded: true});
 	};
+	handleError = () => {
+		// the resized copy couldn't be loaded, so try the original
+		var fallbacksrc = this.props.fallbacksrc;
+		if(fallbacksrc && this.state.src !== fallbacksrc){
+			this.setState({src: fallbacksrc});
+			this.imgElement.src = fallbacksrc;
+		}
+	};
 	render() {
-		var imgsrc = this.props.imgsrc.replace("http://", "https://");
 		return (
 			<div className="image" style={this.style}>
 				{(() => {if(this.state.loaded){
-					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={imgsrc} alt={this.props.alt} title={this.props.title} />
+					return <img style={this.imgstyle} onDragStart={function(e){e.preventDefault();}} src={this.state.src} alt={this.props.alt} title={this.props.title} />
 				} else {
-					return <div className="loading-anim"><div className="LA-1"></div><div className="LA-2"></div></div>;
+					return <Loading />;
 				}})()}
 			</div>
 		);

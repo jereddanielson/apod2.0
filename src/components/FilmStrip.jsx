@@ -8,8 +8,7 @@
 	by dynamically loading/unloading HTML elements on the fly.
 
 	Thumbnail images are pulled from a NASA service that automatically generates them.
-	They follow a naming convention that makes it fairly easy to access.
-	However it's not always reliable and some images are broken.
+	Their URLs have to be looked up, see modules/archiveBlocks.js.
 
 	Copyright 2016, Jered Danielson
 	jered@uw.edu
@@ -35,7 +34,19 @@ import gsap from "gsap"
 
 import Moment from "moment"
 
+import {EARLIEST_DATE, toDateString} from "../modules/nasa.js"
+import {getThumbnailUrl, loadBlocks} from "../modules/archiveBlocks.js"
+
 import Thumbnail from "./Thumbnail.jsx"
+
+const THUMBNAIL_LOAD_DELAY = 150; // wait for scrolling to pause, so we don't load every date it passes
+
+// Keep the scroll position between today and the earliest date in the archive
+function clampScrollPos(scrollPos, range){
+	var daysInArchive = Moment().diff(Moment(EARLIEST_DATE), "days");
+	var furthestScrollPos = -Math.max(0, daysInArchive + 2 - range) * 60;
+	return Math.max(furthestScrollPos, Math.min(0, scrollPos));
+}
 
 export default class FilmStrip extends React.Component {
 	style = {
@@ -56,20 +67,30 @@ export default class FilmStrip extends React.Component {
 	};
 	scrollBy(amount){
 		// updater form, because React may batch several of these into one render
-		this.setState((state) => ({scrollPos: Math.max(-453120, Math.min(0, state.scrollPos + amount))}));
+		this.setState((state) => ({scrollPos: clampScrollPos(state.scrollPos + amount, state.range)}));
 	}
-	state = {scrollPos: Math.min(this.props.currentDate.diff(Moment(), "days") * 60 + window.innerWidth / 2 - 30, 0), range: Math.ceil(window.innerWidth / 60 + 1)};
+	constructor(props) {
+		super(props);
+		var range = Math.ceil(window.innerWidth / 60 + 1);
+		this.state = {scrollPos: clampScrollPos(props.currentDate.diff(Moment(), "days") * 60 + window.innerWidth / 2 - 30, range), range: range};
+	}
 	componentDidMount() {
 		this.updateRange();
+		this.loadVisibleThumbnails();
 		window.addEventListener("resize", this.updateRange);
 		// attached natively because React's own touchmove listener is passive and can't preventDefault
 		this.rootRef.current.addEventListener("touchmove", this.handleTouchMove, {passive: false});
 	}
 	componentWillUnmount() {
+		clearTimeout(this.thumbnailTimer);
 		window.removeEventListener("resize", this.updateRange);
 		this.rootRef.current.removeEventListener("touchmove", this.handleTouchMove);
 	}
-	componentDidUpdate(prevProps) {
+	componentDidUpdate(prevProps, prevState) {
+		if(Math.ceil(prevState.scrollPos / 60) !== Math.ceil(this.state.scrollPos / 60) || prevState.range !== this.state.range){
+			clearTimeout(this.thumbnailTimer);
+			this.thumbnailTimer = setTimeout(this.loadVisibleThumbnails, THUMBNAIL_LOAD_DELAY);
+		}
 		// props is a new object only when the parent re-rendered. Skipping our own
 		// setState updates is what lets the user scroll the current date out of view.
 		if(prevProps !== this.props){
@@ -81,11 +102,11 @@ export default class FilmStrip extends React.Component {
 		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
 		if(dayFromScroll - 1 < props.currentDate.diff(Moment(), "days")){
 			// outside right bounds
-			this.setState({scrollPos: Math.max(-453120, Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - props.currentDate.diff(Moment(), "days")) * 60)});
+			this.setState({scrollPos: clampScrollPos(Math.ceil(this.state.scrollPos / 60) * 60 + Math.abs(dayFromScroll - props.currentDate.diff(Moment(), "days")) * 60, this.state.range)});
 		}
 		if(dayFromScroll - this.state.range + 2 > props.currentDate.diff(Moment(), "days")){
 			// outside left bounds
-			this.setState({scrollPos: Math.max(-453120, Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (this.rootRef.current.clientWidth % 60))});
+			this.setState({scrollPos: clampScrollPos(Math.floor(this.state.scrollPos / 60) * 60 - Math.abs(dayFromScroll - this.state.range + 2 - props.currentDate.diff(Moment(), "days")) * 60 + (this.rootRef.current.clientWidth % 60), this.state.range)});
 		}
 	};
 	updateRange = () => {
@@ -93,6 +114,21 @@ export default class FilmStrip extends React.Component {
 		var thisWidth = this.rootRef.current.clientWidth;
 		// wait for the new range to be applied, keepCurrentInView depends on it
 		this.setState({range: Math.ceil(thisWidth / 60 + 1)}, () => this.keepCurrentInView(this.props));
+	};
+	getVisibleDates(){
+		var dateArr = []; // all the dates to show (date strings)
+		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
+		// beginning of filmstrip date range is based on scroll position and range of days to show
+		var dateMarker = Moment().subtract(-dayFromScroll + this.state.range, "days");
+		for(var i = 0; i < this.state.range; i++){
+			dateMarker.add(1, "days");
+			dateArr.push(toDateString(dateMarker));
+		}
+		return dateArr;
+	}
+	loadVisibleThumbnails = () => {
+		// when a block arrives, re-render so its thumbnails appear
+		loadBlocks(this.getVisibleDates(), () => this.forceUpdate());
 	};
 	handlePointerStart = (e) => {
 		if(this.inertiaTween){
@@ -141,10 +177,8 @@ export default class FilmStrip extends React.Component {
 	};
 	render() {
 		//console.log(Date.now());
-		var dateArr = []; // all the dates to show (date strings)
-		var dayFromScroll = Math.ceil(this.state.scrollPos / 60); // scroll position determines which day we count from
-		// beginning of filmstrip date range is based on scroll position and range of days to show
-		var dateMarker = Moment().subtract(-dayFromScroll + this.state.range, "days");
+		var dateArr = this.getVisibleDates();
+		var dayFromScroll = Math.ceil(this.state.scrollPos / 60);
 
 		// //console.log(dayFromScroll, dateMarker, this.state.scrollPos, this.props.currentDate.diff(Moment(), "days"), this.state.range);
 		// if(dayFromScroll - 1 < this.props.currentDate.diff(Moment(), "days")){
@@ -154,18 +188,13 @@ export default class FilmStrip extends React.Component {
 		// 	console.log("outside left bounds by " + (dayFromScroll - this.state.range + 2 - this.props.currentDate.diff(Moment(), "days")));
 		// }
 
-		for(var i = 0; i < this.state.range; i++){
-			dateMarker.add(1, "days");
-			dateArr.push(dateMarker.toJSON().substring(0, 10));
-		}
-
 		var self = this;
 
 		return (
 			<div id="filmstrip" ref={this.rootRef} onWheel={this.handleWheel} onMouseDown={this.handlePointerStart} onMouseMove={this.handlePointerMove} onMouseUp={this.handlePointerUp} onMouseLeave={this.handlePointerUp} onTouchStart={this.handleTouchStart} onTouchEnd={this.handleTouchUp} onTouchCancel={this.handleTouchUp} style={this.style}>
 				<div style={{transform: "translateX("+(-this.state.scrollPos % 60)+"px)", position: "absolute", right: "0"}}>
 					{dateArr.map(function(dateString){
-						return <Thumbnail isSelected={dateString == self.props.currentDate.toJSON().substring(0, 10) ? true : undefined} key={dateString + "thumb"} dateString={dateString} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />
+						return <Thumbnail isSelected={dateString == toDateString(self.props.currentDate) ? true : undefined} key={dateString + "thumb"} dateString={dateString} imgsrc={getThumbnailUrl(dateString)} loadEntry={self.props.loadEntry} isDragging={self.state.isDragging} />
 					})}
 				</div>
 			</div>
