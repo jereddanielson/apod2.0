@@ -97,6 +97,17 @@ export function getThumbnailUrl(dateString){
 }
 
 /*
+Get the image URL for a date exactly as the API gave it, to use if the
+thumbnail URL fails, if it has been loaded.
+@param {string} dateString - Date in YYYY-MM-DD format
+@returns {string} - The URL, or undefined
+*/
+export function getThumbnailFallbackUrl(dateString){
+	var summary = getSummary(dateString);
+	return summary && summary.hdurl ? summary.hdurl : undefined;
+}
+
+/*
 Check whether a date's entry is a video, if its summary has been loaded.
 @param {string} dateString - Date in YYYY-MM-DD format
 @returns {boolean} - True for a video, false for an image or a summary that hasn't loaded

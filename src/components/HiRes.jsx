@@ -38,11 +38,19 @@ export default class HiRes extends React.Component {
 		maxHeight: "100vh",
 		boxShadow: "0 0 100px #404448"
 	};
+	handleError = (e) => {
+		// the original file couldn't be loaded, so try the API's own URL
+		var img = e.target;
+		if(this.props.fallbackurl && !img.dataset.triedFallback){
+			img.dataset.triedFallback = "true";
+			img.src = this.props.fallbackurl.replace("http://", "https://");
+		}
+	};
 	render() {
 		var url = this.props.url.replace("http://", "https://");
 		return (
 			<div style={this.style} onClick={this.props.toggleHiRes}>
-				<img style={this.imgStyle} src={url} />
+				<img style={this.imgStyle} src={url} onError={this.handleError} />
 			</div>
 		);
 	}

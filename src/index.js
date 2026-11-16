@@ -104,7 +104,7 @@ class APP extends React.Component {
 				{this.state.initialImageLoaded ? <SideBar data={this.state.data} currentDate={this.state.date} setNewDate={this.loadEntry} /> : undefined}
 				{this.state.initialImageLoaded ? <FilmStrip loadEntry={this.loadEntry} currentDate={this.state.date} /> : undefined}
 				{(() => {if(this.state.showHiRes && this.state.data.hdurl){
-					return <HiRes url={this.state.data.hdurl} toggleHiRes={this.toggleHiRes} />
+					return <HiRes url={this.state.data.hdurl} fallbackurl={this.state.data.apiurl} toggleHiRes={this.toggleHiRes} />
 				} else {
 					return <ContentBox onIMGLoad={this.onIMGLoad} toggleHiRes={this.toggleHiRes} >
 						{this.state.data.reactElement}

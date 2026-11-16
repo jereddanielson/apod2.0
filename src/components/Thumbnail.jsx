@@ -69,6 +69,16 @@ export default class Thumbnail extends React.Component {
 		transform: "translate(-50%, -50%)",
 		pointerEvents: "none"
 	};
+	handleError = (e) => {
+		// the resized copy couldn't be loaded, so try the API's own URL, then give up
+		var img = e.target;
+		if(this.props.fallbacksrc && !img.dataset.triedFallback){
+			img.dataset.triedFallback = "true";
+			img.src = this.props.fallbacksrc;
+		} else {
+			img.style.display = "none";
+		}
+	};
 	handleClick = () => {
 		// when clicked, load the appropriate date way back in index.js
 		if(!this.props.isDragging){
@@ -83,7 +93,7 @@ export default class Thumbnail extends React.Component {
 		return (
 			<div className="thumbnail" onClick={this.handleClick} style={this.divStyle}>
 				<div style={{position: "absolute", width: 20, height: 20, borderRadius: 10, background: "rgba(255, 255, 255, 0.25)", left: "50%", top: "50%", transform: "translate(-50%, -50%)"}}></div>
-				{this.props.imgsrc ? <img style={this.imgStyle} alt="" onDragStart={function(e){e.preventDefault();}} onError={function(e){e.target.style.display = "none";}} src={this.props.imgsrc} /> : undefined}
+				{this.props.imgsrc ? <img style={this.imgStyle} alt="" onDragStart={function(e){e.preventDefault();}} onError={this.handleError} src={this.props.imgsrc} /> : undefined}
 				{this.props.isVideo ? <svg style={this.playIconStyle} width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="rgba(0, 0, 0, 0.5)" /><path fill="rgba(255, 255, 255, 0.8)" d="M9.5 7v10l8-5z" /></svg> : undefined}
 				{(() => {if(this.props.isSelected){
 					return <div style={Object.assign({}, this.overlayStyle, this.activeStyle)} className="thumbnail-overlay"></div>

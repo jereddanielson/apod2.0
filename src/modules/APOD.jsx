@@ -37,7 +37,7 @@ import React from "react"
 import Moment from "moment"
 
 import {getSummary} from "./archiveBlocks.js"
-import {API_URL, cleanCredit, cleanExplanation, findVideo, resizedImageUrl, toDateCode, toDateString} from "./nasa.js"
+import {API_URL, cleanCredit, cleanExplanation, findVideo, originalImageUrl, resizedImageUrl, toDateCode, toDateString} from "./nasa.js"
 
 import Image from "../components/Image.jsx"
 import Loading from "../components/Loading.jsx"
@@ -132,7 +132,9 @@ var APOD = function(){
 		ret.credit = cleanCredit(data.credit);
 		ret.date = data.date;
 		ret.explanation = cleanExplanation(data.explanation);
-		ret.hdurl = data.hdurl;
+		ret.hdurl = data.hdurl ? originalImageUrl(data.hdurl) : undefined;
+		// the image URL exactly as the API gave it, used if our rewritten URLs fail
+		ret.apiurl = data.hdurl;
 		ret.mediatype = data.media_type;
 		ret.permalink = data.permalink;
 		ret.title = data.title;
@@ -145,11 +147,12 @@ var APOD = function(){
 			// a video's location isn't in the summary, so its text is all we can show for now
 			ret.isComplete = false;
 			ret.hdurl = undefined;
+			ret.apiurl = undefined;
 			ret.reactElement = <Loading key={ret.date + "loading"} />;
 		} else if(video){
 			ret.reactElement = <Video key={ret.date + "vid"} type={video.type} vidsrc={video.src} permalink={ret.permalink} title={ret.title} />;
 		} else if(ret.sdurl) {
-			ret.reactElement = <Image key={ret.date + "img"} imgsrc={ret.sdurl} fallbacksrc={ret.hdurl} alt={data.alt} title={ret.title} />;
+			ret.reactElement = <Image key={ret.date + "img"} imgsrc={ret.sdurl} fallbacksrc={ret.apiurl} alt={data.alt} title={ret.title} />;
 		} else {
 			ret.reactElement = errorElement(<a href={ret.permalink} target="_blank" rel="noopener noreferrer">View this entry on NASA's website.</a>);
 		}
